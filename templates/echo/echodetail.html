@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+
+<html lang="en">
+{% include "components/head.html" %}
+  <body>
+    {% include "components/navbar.html" %}
+    <div class="flex overflow-hidden bg-white pt-16">
+      <aside
+        id="sidebar"
+        class="fixed hidden z-20 h-full top-0 left-0 pt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
+        aria-label="Sidebar"
+      >
+      <div
+      class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0"
+    >
+    {% include "components/sidebar.html" %}
+    </div>
+      </aside>
+      <div
+        class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
+        id="sidebarBackdrop"
+      ></div>
+      <div
+        id="main-content"
+        class="h-full w-full relative overflow-y-auto lg:ml-64 flex justify-center items-center"
+      >
+        <main
+          id="wrapper"
+          class="relative w-full rounded-md p-7 bg-white shadow"
+        >
+          <header>{{ title }}</header>
+            {{form.errors}}
+          <form method="POST" action="{% url 'newecho' %}">
+            <div class="form first">
+              <br class="details cases">
+
+                    <span class="title"><b>Patient</b></span>
+                    <div class="fields">
+                        <div class="input-field">
+                                {{ echo.patient }}
+                        </div>
+                    </div>
+                  <br></br>
+
+                <span class="title"><b>Referring MD</b></span>
+                    <div class="fields">
+                        <div class="input-field">
+                            {{ echo.referring_md }}
+                            </div>
+                    </div>
+                    <br></br>
+
+
+                    <span class="title"><b>Rate</b></span>
+                    <div class="fields">
+                        <div class="input-field">
+                                                    <label>Rate</label>
+                            <div class="{% if 'rate' in echo.flagged_fields %}flagged{% endif %}">
+                        {{ echo.rate }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <br></br>
+                    <span class="title"><b>Rhythm</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                        <label>NSR</label>
+                            <div class="{% if 'nsr' in echo.flagged_fields %}flagged{% endif %}">
+                        {{ echo.get_nsr_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Sinus Tachycardia</label>
+                            <div class="{% if 'sinus_tachycardia' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_sinus_tachycardia_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Sinus Bradycardia</label>
+                            <div class="{% if 'sinus_bradycardia' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_sinus_bradycardia_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Atrial Tachycardia</label>
+                            <div class="{% if 'atrial_bradycardia' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_atrial_bradycardia_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Supraventricular Tachycardia</label>
+                            <div class="{% if 'supraventricular_bradycardia' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_supraventricular_bradycardia_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Narrow QRS Tachycardia</label>
+                            <div class="{% if 'narrow_qs_tachycardia' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_narrow_qs_tachycardia_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Wide QRS Tachycardia</label>
+                            <div class="{% if 'wide_qs_tachycardia' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_wide_qs_tachycardia_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>VT</label>
+                            <div class="{% if 'vt' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_vt_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                        <label>VF</label>
+                            <div class="{% if 'vf' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_vf_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">AVB</label>
+                            <div class="{% if 'avb' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_avb_display }}
+                            </div>
+                        </div>
+                        <div class="input-field"></div>
+
+                    </div>
+
+                    <br></br>
+                    <span class="title"><b>Axis</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                        <label>Axis</label>
+                            <div class="{% if 'axis' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.get_axis_display }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <br></br>
+                    <span class="title"><b>P-Wave</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">P-Wave Appearance</label>
+                            <div class="{% if 'p_wave_appearance' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_p_wave_appearance_display }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br></br>
+                    <span class="title"><b>Q-Wave</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">Q-Wave Appearance</label>
+                            <div class="{% if 'q_wave_appearance' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_q_wave_appearance_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Q-Wave Morphology</label>
+                            <div class="{% if 'q_wave_morphology' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_q_wave_morphology_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Location</label>
+                            {% for location in echo.location.all %}
+                                <div class="{% if 'location' in echo.flagged_fields %}flagged{% endif %}">
+                                <p>{{ location.option }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <br></br>
+                <span class="title"><b>QRS Complex</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">QRS Morphology</label>
+                            <div class="{% if 'qrs_morphology' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_qrs_morphology_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">QRS Height</label>
+                            <div class="{% if 'qrs_height' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_qrs_height_display }}
+                            </div>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">QRS Pattern</label>
+                            <div class="{% if 'qrs_pattern' in echo.flagged_fields %}flagged{% endif %}">
+                           {{ echo.get_qrs_pattern_display }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    </div>
+
+                    <br></br>
+                <span class="title"><b>ST Segment</b></span>
+                    <div class="fields">
+                        <div class="input-field">
+                            <label>St Segment</label>
+                            {% for stsegment in echo.st_segment.all %}
+                                <p>{{ stsegment.option }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <div class="input-field">
+                            <label>St Segment Elevation</label>
+                            {% for elevation in echo.st_segment_elevation.all %}
+                                <p>{{ elevation.option }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <div class="input-field">
+                            <label>St Segment Depression</label>
+                            {% for depression in echo.st_segment_depression.all %}
+                                <p>{{ depression.option }}</p>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+                    <br></br>
+              <span class="title"><b>T Wave</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">T Wave Morphology</label>
+                            {% for t_wave in echo.t_wave_morphology.all %}
+                                <p>{{ t_wave.option }}</p>
+                            {% endfor %}
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Strain Pattern</label>
+                            <div class="{% if 'strain_problem' in echo.flagged_fields %}flagged{% endif %}">
+                            {{ echo.get_strain_problem_display }}
+                            </div>
+                        </div>
+                        <div class="input-field"></div>
+                    </div>
+                    <br></br>
+              <span class="title"><b>QT Corrected Interval</b></span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                        <label>QT</label>
+                            <div class="{% if 'qt' in echo.flagged_fields %}flagged{% endif %}">
+                                {{ echo.qt }}
+                            </div>
+                        </div>
+
+{#                        <div class="input-field">#}
+{#                        <label>RR Interval</label>#}
+{#                                {{ echo.pr_interval }}#}
+{#                        </div>#}
+
+{#                        <div class="input-field">#}
+{#                        <label>QTc</label>#}
+{#                                {{ echo.qtc|floatformat:2|intcomma }}#}
+{#                        </div>#}
+
+                    </div>
+
+
+                    </div>
+
+          </form>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

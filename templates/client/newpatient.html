@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+{% include "components/head.html" %}
+  <body>
+    {% include "components/navbar.html" %}
+    <div class="flex overflow-hidden bg-white pt-16">
+      <aside
+        id="sidebar"
+        class="fixed hidden z-20 h-full top-0 left-0 pt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
+        aria-label="Sidebar"
+      >
+      <div
+      class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0"
+    >
+    {% include "components/sidebar.html" %}
+    </div>
+      </aside>
+      <div
+        class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
+        id="sidebarBackdrop"
+      ></div>
+      <div
+        id="main-content"
+        class="h-full w-full relative overflow-y-auto lg:ml-64 flex justify-center items-center"
+      >
+        <main
+          id="wrapper"
+          class="relative w-full rounded-md p-7 bg-white shadow"
+        >
+          <header>New Patient</header>
+            {{form.errors}}
+          <form method="POST" action="{% url 'new_patient' %}">
+            {% csrf_token %}
+            <div class="form first">
+                {% if error %}
+                    {{ error }}
+                {% endif %}
+              <div class="details cases">
+                <span class="title">Account Detail</span>
+
+                <div class="fields">
+                  <div class="input-field">
+                    <label>First Name</label>
+                    <input
+                      name="first_name"
+                      type="text"
+                      placeholder="Enter first name"
+                      required
+                    />
+                  </div>
+
+                  <div class="input-field">
+                    <label>Last Name</label>
+                    <input name="last_name" type="text" placeholder="Enter last name" required />
+                  </div>
+
+                  <div class="input-field">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+
+                  <div class="input-field">
+                    <label>Password</label>
+                    <input
+                      name="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      required
+                    />
+                  </div>
+
+                  <div class="input-field">
+                    <label>Birthdate</label>
+                    <input
+                      name="birthdate"
+                      type="date"
+                      placeholder="Enter your birthdate"
+                      required
+                    />
+                  </div>
+                  <div class="input-field">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <span class="title">Personal Detail</span>
+
+            <div class="details cases">
+              <div class="fields">
+
+                <div class="input-field">
+                  <label>Address</label>
+                  <input name="address" type="text" placeholder="Enter Address" required />
+                </div>
+
+                <div class="input-field">
+                  <label>Phone</label>
+                  <input name="phone" type="text" placeholder="Enter Address" required />
+                </div>
+
+                <div class="input-field">
+                  <label>Gender</label>
+                  <select name="gender" id="patient">
+                    <option selected disabled value="patient">
+                      Select Gender
+                    </option>                    
+                    <option value="1">Male</option>
+                    <option value="2">Female</option>
+                  </select> 
+                </div>
+              </div>
+
+            </div>
+
+            <button type="submit" class="submit">Create</button>
+
+          </form>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

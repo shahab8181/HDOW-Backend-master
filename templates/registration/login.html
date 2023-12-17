@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/signin-signup.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/iphonelogo.png' %}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'images/iphonelogo.png' %}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'images/iphonelogo.png' %}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'images/iphonelogo.png' %}" />
+    <title>Sign In</title>
+  </head>
+  <body>
+    <main class="bg-gray-50">
+      <div
+        class="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0"
+      >
+        <a
+          href="#"
+          class="text-2xl font-semibold flex justify-center items-center mb-8 lg:mb-10"
+        >
+          <img
+            src="{% static 'images/logo.png' %}"
+            class="h-10 mr-4"
+            alt="Windster Logo"
+          />
+          <span class="self-center text-1xl font-bold whitespace-nowrap"
+            >Heart Diagnostic on the Wheel</span
+          >
+        </a>
+
+        <div
+          class="bg-white shadow rounded-lg md:mt-0 w-full sm:max-w-screen-sm xl:p-0"
+        >
+          <div class="p-6 sm:p-8 lg:p-16 space-y-8">
+            <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
+              Sign In
+            </h2>
+            <form class="mt-8 space-y-6" method="POST" action="{% url 'login' %}">
+              {% csrf_token %}
+              <div>
+                <label
+                  for="email"
+                  class="text-sm font-medium text-gray-900 block mb-2"
+                  >Your Username</label
+                >
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                  placeholder="name@company.com"
+                  required=""
+                />
+              </div>
+              <div>
+                <label
+                  for="password"
+                  class="text-sm font-medium text-gray-900 block mb-2"
+                  >Your Password</label
+                >
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                  required=""
+                />
+              </div>
+              <div class="flex items-start">
+                <div class="flex items-center h-5">
+                  <input
+                    id="remember"
+                    aria-describedby="remember"
+                    name="remember"
+                    type="checkbox"
+                    class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+                  />
+                </div>
+                <div class="text-sm ml-3">
+                  <label for="remember" class="font-medium text-gray-900"
+                    >Remember me</label
+                  >
+                </div>
+                <a
+                  href="#"
+                  class="text-sm text-teal-500 hover:underline ml-auto"
+                  >Lost Password?</a
+                >
+              </div>
+              <button
+                type="submit"
+                class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-base px-5 py-3 w-full sm:w-auto text-center"
+              >
+                Login to your account
+              </button>
+              <div class="text-sm font-medium text-gray-500">
+                Not registered?
+                <a
+                  href="#"
+                  class="text-teal-500 hover:underline"
+                  >Create account</a
+                >
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+</html>

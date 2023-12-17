@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+{% include "components/head.html" %}
+<body>
+{% include 'components/navbar.html' %}
+<div class="flex overflow-hidden bg-white pt-16">
+    <aside
+            id="sidebar"
+            class="fixed hidden z-20 h-full top-0 left-0 pt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
+            aria-label="Sidebar"
+    >
+        <div
+                class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0"
+        >
+            {% include 'components/sidebar.html' %}
+        </div>
+    </aside>
+    <div
+            class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
+            id="sidebarBackdrop"
+    ></div>
+    <div
+            id="main-content"
+            class="h-full w-full relative overflow-y-auto lg:ml-64 flex justify-center items-center"
+    >
+        <main
+                id="wrapper"
+                class="relative w-full rounded-md p-7 bg-white shadow"
+        >
+            {{ form.errors }}
+            <header>New Echocardiography</header>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form first">
+                    <div class="details cases">
+
+
+                    <span class="title"><b>Patient</b></span>
+                    <div class="fields">
+                        <div class="input-field">
+                                <label for="patient">Patient</label>
+                                <select name="client" id="patient">
+                                    <option selected disabled value="patient">
+                                        Select Patient
+                                    </option>
+                                    {% for patient in patients %}
+
+                                        <option value="{{ patient.id }}">{{ patient }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                    </div>
+
+                        <span class="title"><b>Study Quality</b></span>
+                            <div class="fields">
+                            <div class="input-field">
+                                <label for="study_quality">Study Quality</label>
+                            <select name="study_quality" multiple multiselect-hide-x="true">
+                                {% for option in study_quality_options %}
+                                    <option value="{{ option.id }}">{{ option.option }}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                            <div class="input-field"></div>
+                        </div>
+
+                        <span class="title"><b>Personal Details</b></span>
+
+                        <div class="fields">
+                            <div class="input-field">
+                                <label>Weight (kg)</label>
+                                <input
+                                        name="weight"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter weight"
+                                        required
+                                />
+                            </div>
+
+                            <div class="input-field">
+                                <label>Height (CM)</label>
+                                <input
+                                        name="height"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter height"
+                                        required
+                                />
+                            </div>
+
+
+
+                            <div class="input-field">
+                                <label>SBP</label>
+                                <input
+                                        name="sbp"
+                                        type="number"
+                                        step=".01"
+                                        onkeypress="if (this.value.length > 2) return false;"
+                                        placeholder="Enter sbp"
+                                        required
+                                />
+                            </div>
+
+                            <div class="input-field">
+                                <label>DBP</label>
+                                <input
+                                        name="dbp"
+                                        type="number"
+                                        step=".01"
+                                        onkeypress="if (this.value.length > 2) return false;"
+                                        placeholder="Enter dbp"
+                                        required
+                                />
+                            </div>
+
+
+                            <div class="input-field">
+                                <label>Complaint</label>
+                                <select name="complaint_selected" id="patient">
+                                    <option selected disabled value="left_ventricular">
+                                        Select...
+                                    </option>
+                                    {% for complaint in case.COMPLAINT_CHOICES %}
+                                        <option value="{{ complaint.0 }}">{{ complaint.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="input-field">
+                                <label>Complaint (Others)</label>
+                                <input
+                                        name="complaint_description"
+                                        type="text"
+                                        placeholder="Enter Complaint"
+                                />
+                            </div>
+
+                        </div>
+
+
+                        <img class="details cases">
+
+
+                            <div class="details cases">
+
+                                <span class="title"><b>Left Ventricular</b></span>
+                                <div class="fields">
+                                <div class="input-field">
+                                <label for="patient">Left Ventricular</label>
+                                <select name="left_ventricular" id="left_ventricular" class="patient">
+                                    <option selected disabled value="left_ventricular">
+                                        Select...
+                                    </option>
+                                    {% for left_ventricular in study.left_ventricular_choices %}
+                                        <option value="{{ left_ventricular.0 }}">{{ left_ventricular.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                </div>
+
+                                <div class="input-field">
+                                <label for="wall_thickness">Wall Thickness</label>
+                                <select name="wall_thickness" class="patient" id="wallthickness">
+                                    <option selected disabled value="wall_thickness">
+                                        Select...
+                                    </option>
+                                    {% for wall_thickness in study.wall_thickness_choices %}
+                                        <option value="{{ wall_thickness.0 }}">{{ wall_thickness.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                </div>
+
+                                <div class="input-field">
+                                <label for="patient">Systolic DysFunction</label>
+                                <select name="systolic_function" class="patient" id="systolic_function">
+                                    <option selected disabled value="systolic_function">
+                                        Select...
+                                    </option>
+                                    {% for systolic_function in study.systolic_function_choices %}
+                                        <option value="{{ systolic_function.0 }}">{{ systolic_function.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>Global EF (%)</label>
+                                    <input
+                                            name="global_ef"
+                                            id="global_ef"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Global EF"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>EF by Simpson Method</label>
+                                    <input
+                                            name="ef_by_simpson_method"
+                                            id="ef_by_simpson_method"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter EF"
+                                            required
+                                    />
+                                </div>
+                                
+                                <div class="input-field">
+                                    <label for="diastolic_function">Diastolic Function</label>
+                                    <select name="diastolic_function" class="patient" id="diastolic_function">
+                                        <option selected disabled value="diastolic_function">
+                                            Select...
+                                        </option>
+                                        {% for diastolic_function in study.diastolic_function_choices %}
+                                            <option value="{{ diastolic_function.0 }}">{{ diastolic_function.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                <label for="diastolic_function">Asymmetric Septal Hypertrophy</label>
+                                    <select name="asymmetric_septal_hypertrophy" id="asymmetric_septal_hypertrophy" class="patient">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for asymmetric_septal_hypertrophy in study.asymmetric_septal_hypertrophy_choices %}
+                                            <option value="{{ asymmetric_septal_hypertrophy.0 }}">{{ asymmetric_septal_hypertrophy.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                    <div class="input-field">
+                                    <label for="wall_motion_abnormality">Wall Motion Abnormality</label>
+                                  <select name="wall_motion_abnormality" class="patient" id="wall_motion_abnormality">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for wall_motion_abnormality in study.boolean_choices %}
+                                            <option value="{{ wall_motion_abnormality.0 }}">{{ wall_motion_abnormality.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-field"></div>
+
+                                </div>
+                            </div>
+
+                            <img style="height: 250px;" src="https://www.researchgate.net/publication/261141035/figure/fig1/AS:805192517816321@1568984264425/Explanation-of-17-segment-standard-model-of-left-ventricle-with-the-name-of-each-segment.png"></img>
+                        <span class="title"><b>17-Segment left ventricular Map</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                        <label>Basal Anterior</label>
+                                        <input
+                                                name="basal_anterior"
+                                                onchange="wmsi(this);"
+                                                type="number"
+                                                step=".01"
+                                                min="1"
+                                                max="4"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Anteroseptal</label>
+                                        <input
+                                                name="basal_anteroseptal"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Inferoseptal</label>
+                                        <input
+                                                name="basal_inferoseptal"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Inferior</label>
+                                        <input
+                                                name="basal_inferior"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Inferolateral</label>
+                                        <input
+                                                name="basal_inferolateral"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Anterolateral</label>
+                                        <input
+                                                name="basal_anterolateral"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Anterior</label>
+                                        <input
+                                                name="mid_anterior"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Anteroseptal</label>
+                                        <input
+                                                name="mid_anteroseptal"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Inferoseptal</label>
+                                        <input
+                                                name="mid_inferoseptal"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Inferior</label>
+                                        <input
+                                                name="mid_inferior"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Inferolateral</label>
+                                        <input
+                                                name="mid_inferolateral"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Anterolateral</label>
+                                        <input
+                                                name="mid_anterolateral"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Anterior</label>
+                                        <input
+                                                name="apical_anterior"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Septal</label>
+                                        <input
+                                                name="apical_septal"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Inferior</label>
+                                        <input
+                                                name="apical_inferior"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Lateral</label>
+                                        <input
+                                                name="apical_lateral"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apex</label>
+                                        <input
+                                                name="apex"
+                                                onchange="wmsi(this);"
+                                                min="1"
+                                                max="4"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>WMSI:</label>
+                                        <input
+                                                name="wmsiaverage"
+                                                id="wmsiaverage"
+                                                type="number"
+                                                disabled
+                                                value="0"
+                                                step=".01"
+                                                required
+                                        />
+                                </div>
+
+                            </div>
+
+                        <span class="title"><b>Left Atrium</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label for="left_atrium_size">Left Atrium Size</label>
+                                    <select name="left_atrium_size" class="patient" id="left_atrium_size">
+                                        <option selected disabled value="left_atrium_size">
+                                            Select...
+                                        </option>
+                                        {% for left_atrium_size in study.left_atrium_size_choices %}
+                                            <option value="{{ left_atrium_size.0 }}">{{ left_atrium_size.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="la_pressure">LA Pressure (mmHg)</label>
+                                    <select name="la_pressure" id="la_pressure" class="patient">
+                                        <option selected disabled value="la_pressure">
+                                            Select...
+                                        </option>
+                                        {% for la_pressure in study.la_pressure_choices %}
+                                            <option value="{{ la_pressure.0 }}">{{ la_pressure.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="smoky_pattern">Smoky Pattern</label>
+                                  <select name="smoky_pattern" class="patient" id="smoky_pattern">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for smoky_pattern in study.boolean_choices %}
+                                            <option value="{{ smoky_pattern.0 }}">{{ smoky_pattern.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                        <span class="title"><b>Right Atrium (mm)</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label for="right_atrium_size">Right Atrium Size</label>
+                                    <select name="right_atrium_size" id="right_atrium_size" class="patient">
+                                        <option selected disabled value="la_pressure">
+                                            Select...
+                                        </option>
+                                        {% for right_atrium_size in study.right_atrium_size_choices %}
+                                            <option value="{{ right_atrium_size.0 }}">{{ right_atrium_size.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="right_atrium_size">RA Pressure (mmHg)</label>
+                                    <select name="ra_pressure" id="ra_pressure" class="patient">
+                                        <option selected disabled value="ra_pressure">
+                                            Select...
+                                        </option>
+                                        {% for ra_pressure in study.ra_pressure_choices %}
+                                            <option value="{{ ra_pressure.0 }}">{{ ra_pressure.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            <div class="input-field"></div>
+                            </div>
+
+                        <span class="title"><b>Right Ventricle</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="rv_size">Right Ventricle Size</label>
+                                    <select name="rv_size" class="patient" id="rv_size">
+                                        <option selected disabled value="rv_size">
+                                            Select...
+                                        </option>
+                                        {% for rv_size in study.rv_size_choices %}
+                                            <option value="{{ rv_size.0 }}">{{ rv_size.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="rv_function">Right Ventricle Function</label>
+                                    <select name="rv_function" class="patient" id="rv_function">
+                                        <option selected disabled value="rv_function">
+                                            Select...
+                                        </option>
+                                        {% for rv_function in study.rv_function_choices %}
+                                            <option value="{{ rv_function.0 }}">{{ rv_function.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            <div class="input-field"></div>
+                            </div>
+
+                        <span class="title"><b>Mitral Valve</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mitral_valve_morphology">Morphology</label>
+                                    <select name="mitral_valve_morphology" id="mitral_valve_morphology" class="patient">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for morphology in study.mitral_valve_morphology_choices %}
+                                            <option value="{{ morphology.0 }}">{{ morphology.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mvg_peak">MVG Peak (mmHg)</label>
+                                    <input
+                                        name="mvg_peak"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter MVG Peak"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mvg_mean">MVG Mean (mmHg)</label>
+                                    <input
+                                        name="mvg_mean"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter MVG Mean"
+                                        required
+                                    />
+                                </div>
+
+
+                                <div class="input-field">
+                                    <label for="mitral_stenosis">Mitral Stenosis</label>
+                                    <select name="mitral_stenosis" class="patient" id="mitral_stenosis">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for stenosis in study.mitral_stenosis_choices %}
+                                            <option value="{{ stenosis.0 }}">{{ stenosis.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mitral_regurgitation">Mitral Regurgitation</label>
+                                    <select name="mitral_regurgitation" class="patient" id="mitral_regurgitation">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for regurgitation in study.mitral_regurgitation_choices %}
+                                            <option value="{{ regurgitation.0 }}">{{ regurgitation.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+
+                        <span class="title"><b>Aortic Valve</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label for="aortic_valve_morphology">Morphology</label>
+                                    <select name="aortic_valve_morphology" id="aortic_valve_morphology" class="patient">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for morphology in study.aortic_valve_morphology_choices %}
+                                            <option value="{{ morphology.0 }}">{{ morphology.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mvg_peak">AVG Peak (mmHg)</label>
+                                    <input
+                                        name="avg_peak"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter AVG Peak"
+                                        required
+                                    />
+                                </div>
+                                <div class="input-field">
+                                    <label for="mvg_peak">AVG Mean (mmHg)</label>
+                                    <input
+                                        name="avg_mean"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter AVG Mean"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="aortic_stenosis">Aortic Stenosis</label>
+                                    <select name="aortic_stenosis" class="patient" id="aortic_stenosis">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for stenosis in study.aortic_stenosis_choices %}
+                                            <option value="{{ stenosis.0 }}">{{ stenosis.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="aortic_regurgitation">Aortic Regurgitation</label>
+                                    <select name="aortic_regurgitation" class="patient" id="aortic_regurgitation">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for regurgitation in study.aortic_regurgitation_choices %}
+                                            <option value="{{ regurgitation.0 }}">{{ regurgitation.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+
+                        <span class="title"><b>Tricuspid Valve</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="tricuspid_valve_morphology">Morphology</label>
+                                    <select name="tricuspid_valve_morphology" id="tricuspid_valve_morphology" class="patient">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for morphology in study.tricuspid_valve_morphology_choices %}
+                                            <option value="{{ morphology.0 }}">{{ morphology.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="tricuspid_stenosis">Tricuspid Stenosis</label>
+                                    <select name="tricuspid_stenosis" class="patient" id="tricuspid_stenosis">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for stenosis in study.tricuspid_stenosis_choices %}
+                                            <option value="{{ stenosis.0 }}">{{ stenosis.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="tricuspid_stenosis">Tricuspid Regurgitation</label>
+                                    <select name="tricuspid_regurgitation" class="patient" id="tricuspid_regurgitation">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for regurgitation in study.tricuspid_regurgitation_choices %}
+                                            <option value="{{ regurgitation.0 }}">{{ regurgitation.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                <label>TRPG (mmHg)</label>
+                                <input
+                                        name="trpg"
+                                        type="number"
+                                        placeholder="Enter TRPG"
+                                        required
+                                />
+                                </div>
+
+                            </div>
+
+                        <span class="title"><b>Pulmonary Valve</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="pulmonary_valve_morphology">Morphology</label>
+                                    <select name="pulmonary_valve_morphology" id="pulmonary_valve_morphology" class="patient">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for morphology in study.pulmonary_valve_morphology_choices %}
+                                            <option value="{{ morphology.0 }}">{{ morphology.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-field">
+                                    <label for="pulmonary_stenosis">Pulmonary Stenosis</label>
+                                    <select name="pulmonary_stenosis" class="patient" id="pulmonary_stenosis">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for stenosis in study.pulmonary_stenosis_choices %}
+                                            <option value="{{ stenosis.0 }}">{{ stenosis.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="pulmonary_stenosis">Pulmonary Regurgitation</label>
+                                    <select name="pulmonary_regurgitation" class="patient" id="pulmonary_regurgitation">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for regurgitation in study.pulmonary_regurgitation_choices %}
+                                            <option value="{{ regurgitation.0 }}">{{ regurgitation.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                <label>PG (mmHg)</label>
+                                <input
+                                        name="pg"
+                                        type="number"
+                                        step=".01"
+                                        placeholder="Enter PG"
+                                        required
+                                />
+                            </div>
+
+                            </div>
+
+                        <span class="title"><b>Great Vessels</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="aorta">Aorta</label>
+                                    <select name="aorta" class="patient" id="aorta">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for aorta in study.aorta_choices %}
+                                            <option value="{{ aorta.0 }}">{{ aorta.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="pulmonary_artery">Pulmonary Artery</label>
+                                    <select name="pulmonary_artery" id="pulmonary_artery" class="patient">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for pulmonary_artery in study.pulmonary_artery_choices %}
+                                            <option value="{{ pulmonary_artery.0 }}">{{ pulmonary_artery.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-field"></div>
+
+                            </div>
+
+                            <span class="title"><b>IAS</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mass_device">IAS</label>
+                                    <select name="ias" class="patient" id="ias">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for ias in study.ias_choices %}
+                                            <option value="{{ ias.0 }}">{{ ias.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <span class="title"><b>IVS</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mass_device">IVS</label>
+                                    <select name="ivs" class="patient" id="ivs">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for ivs in study.ivs_choices %}
+                                            <option value="{{ ivs.0 }}">{{ ivs.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <span class="title"><b>Mass/Device</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mass_device">Mass/Device</label>
+                                    <select name="mass_device" class="patient" id="mass_device">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for mass_device in study.mass_device_choices %}
+                                            <option value="{{ mass_device.0 }}">{{ mass_device.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="message">Description</label>
+                                    <input
+                                            name="massdevice_description"
+                                            id="massdevice_description"
+                                            rows="4"
+                                            class="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
+                                            placeholder="Leave a description..."
+                                            type="text"
+                                    ></input>
+                                </div>
+                            <div class="input-field"></div>
+
+                            </div>
+
+                            </div>
+
+                            <span class="title"><b>Pericardium</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="pericardium">Pericardium</label>
+                                    <select name="pericardium" class="patient" id="pericardium">
+                                        <option selected disabled value="None">
+                                            Select...
+                                        </option>
+                                        {% for pericardium in study.pericardium_choices %}
+                                            <option value="{{ pericardium.0 }}">{{ pericardium.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="message">Description</label>
+                                    <input
+                                            name="pericardium_description"
+                                            id="pericardium_description"
+                                            rows="4"
+                                            class="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
+                                            placeholder="Leave a description..."
+                                            type="text"
+                                    ></input>
+                                </div>
+                            <div class="input-field"></div>
+
+                            </div>
+
+                    <span class="title"><b>LV Dimension</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>LV Diastolic Diameter (cm)</label>
+                                    <input
+                                            name="lv_diastolic_diameter"
+                                            id="lv_diastolic_diameter"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Diastolic BSA (cm/m2)</label>
+                                    <input
+                                            name="lv_diastolic_diameter_bsa"
+                                            id="lv_diastolic_diameter_bsa"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Diameter (cm)</label>
+                                    <input
+                                            name="lv_systolic_diameter"
+                                            id="lv_systolic_diameter"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Diameter BSA (cm/m2)</label>
+                                    <input
+                                            name="lv_systolic_diameter_bsa"
+                                            id="lv_systolic_diameter_bsa"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+                            </div>
+
+                    <span class="title"><b>LV Volume</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>LV Diastolic Volume (ml)</label>
+                                    <input
+                                            name="lv_diastolic_volume"
+                                            id="lv_diastolic_volume"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Diastolic Volume BSA (ml/m2)</label>
+                                    <input
+                                            name="lv_diastolic_volume_bsa"
+                                            id="lv_diastolic_volume_bsa"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Volume (ml)</label>
+                                    <input
+                                            name="lv_systolic_volume"
+                                            id="lv_systolic_volume"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Volume BSA (ml/m2)</label>
+                                    <input
+                                            name="lv_systolic_volume_bsa"
+                                            id="lv_systolic_volume_bsa"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                            </div>
+                    <span class="title"><b>LV Function</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label>LV EF(%)</label>
+                                    <input
+                                            name="lv_ef"
+                                            id="lv_ef"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+                            </div>
+
+                    <span class="title"><b>LV Mass by Linear Method</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>Septal Wall Thickness (cm)</label>
+                                    <input
+                                            name="septal_wall_thickness"
+                                            id="septal_wall_thickness"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>Posterior Wall Thickness (cm)</label>
+                                    <input
+                                            name="posterior_wall_thickness"
+                                            id="posterior_wall_thickness"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Mass (g)</label>
+                                    <input
+                                            name="lv_mass"
+                                            id="lv_mass"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Mass BSA (g/m2)</label>
+                                    <input
+                                            name="lv_mass_bsa"
+                                            id="lv_mass_bsa"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>LV Mass BSA Linear Method</label>
+                                        <input
+                                                name="lv_mass_bsa_linear_method"
+                                                id="lv_mass_bsa_linear_method"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>LV Mass Linear Method</label>
+                                        <input
+                                                name="lv_mass_linear_method"
+                                                id="lv_mass_linear_method"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                            </div>
+
+                    <span class="title"><b>LV Mass by 2D Method</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>LV Mass by 2D Method (g)</label>
+                                    <input
+                                            name="lv_mass_2d_method"
+                                            id="lv_mass_2d_method"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Mass BSA by 2D Method (g/m2)</label>
+                                    <input
+                                            name="lv_mass_bsa_2d_method"
+                                            id="lv_mass_bsa_2d_method"
+                                            type="number"
+                                            step=".01"
+                                            placeholder="Enter Number"
+                                            required
+                                    />
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+
+                            <div class="fields">
+
+                            </div>
+
+                            <span class="title"><b>RV</b></span>
+                    <div class="fields">
+                                    <div class="input-field">
+                                        <label>RV Basal Diameter (mm)</label>
+                                        <input
+                                                name="rv_basal_diameter"
+                                                id="rv_basal_diameter"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                                     <div class="input-field">
+                                        <label>RV Mid Diameter (mm)</label>
+                                        <input
+                                                name="rv_mid_diameter"
+                                                id="rv_mid_diameter"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+                        <div class="input-field"></div>
+
+                    </div>
+
+
+                    <span class="title"><b>Aortic Root</b></span>
+                        <div class="fields">
+
+                                <div class="input-field">
+                                        <label>Annulus (cm)</label>
+                                        <input
+                                                name="annulus"
+                                                id="annulus"
+                                                step=".01"
+                                                type="number"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Sinuses Of Valsalva (cm)</label>
+                                        <input
+                                                name="sinuses_of_valsalva"
+                                                id="sinuses_of_valsalva"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+                                <div class="input-field">
+                                        <label>Sinotublar Junction (cm)</label>
+                                        <input
+                                                name="sinotublar_junction"
+                                                id="sinotublar_junction"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+                                <div class="input-field">
+                                        <label>Proximal Ascending Aorta (cm)</label>
+                                        <input
+                                                name="proximal_ascending_aorta"
+                                                id="proximal_ascending_aorta"
+                                                type="number"
+                                                step=".01"
+                                                placeholder="Enter Number"
+                                                required
+                                        />
+                                </div>
+
+                                <div class="input-field"></div>
+                        </div>
+
+{#                            <span class="title">LV internal dimension</span>#}
+{#                            <div class="fields">#}
+{##}
+{#                                <div class="input-field">#}
+{#                                        <label>Diastolic Dimension</label>#}
+{#                                        <input#}
+{#                                                name="diastolic_dimension"#}
+{#                                                type="number"#}
+{#                                                placeholder="Enter Number"#}
+{#                                                required#}
+{#                                        />#}
+{#                                </div>#}
+{##}
+{#                                <div class="input-field">#}
+{#                                        <label>Systolic Dimension</label>#}
+{#                                        <input#}
+{#                                                name="systolic_dimension"#}
+{#                                                type="number"#}
+{#                                                placeholder="Enter Number"#}
+{#                                                required#}
+{#                                        />#}
+{#                                </div>#}
+{#                                <div class="input-field"></div>#}
+{##}
+{#                            </div>#}
+
+{#                            <span class="title">LV Volume</span>#}
+{#                            <div class="fields">#}
+{##}
+{#                                <div class="input-field">#}
+{#                                        <label>LV EDV</label>#}
+{#                                        <input#}
+{#                                                name="lv_edv"#}
+{#                                                type="number"#}
+{#                                                placeholder="Enter Number"#}
+{#                                                required#}
+{#                                        />#}
+{#                                </div>#}
+{##}
+{#                                <div class="input-field">#}
+{#                                        <label>LV ESV</label>#}
+{#                                        <input#}
+{#                                                name="lv_esv"#}
+{#                                                type="number"#}
+{#                                                placeholder="Enter Number"#}
+{#                                                required#}
+{#                                        />#}
+{#                                </div>#}
+{#                                <div class="input-field"></div>#}
+{##}
+{#                                <div class="input-field">#}
+{#                                        <label>AP Dimension</label>#}
+{#                                        <input#}
+{#                                                name="ap_dimension"#}
+{#                                                id="ap_dimension"#}
+{#                                                type="number"#}
+{#                                                placeholder="Enter Number"#}
+{#                                                required#}
+{#                                        />#}
+{#                                </div>#}
+{##}
+{#                                <div class="input-field">#}
+{#                                        <label>AP Dimension Index</label>#}
+{#                                        <input#}
+{#                                                name="ap_dimension_index"#}
+{#                                                id="ap_dimension_index"#}
+{#                                                type="number"#}
+{#                                                placeholder="Enter Number"#}
+{#                                                required#}
+{#                                        />#}
+{#                                </div>#}
+{#                                <div class="input-field"></div>#}
+{##}
+{#                            </div>#}
+
+
+                            <div class="input-field">
+                            <label for="message">Description</label>
+                            <textarea
+                                    name="description"
+                                    id="message"
+                                    rows="4"
+                                    class="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
+                                    placeholder="Leave a comment..."
+                            ></textarea>
+                        </div>
+
+
+                        <span class="title"><b>Recommendation</b></span>
+                        <div class="input-field">
+                            <select name="recommendation" id="recommendation" class="patient">
+                                <option selected disabled value="None">
+                                    Select...
+                                </option>
+                                {% for recommendation in study.RECOMMENDATION_CHOICES %}
+                                    <option value="{{ recommendation.0 }}">{{ recommendation.1 }}</option>
+                                {% endfor %}
+                            </select>
+                            
+                        </div>
+
+                    <span class="title"><b>Upload Related Files</b></span>
+
+                        <label for="study_quality">Image Scan</label>
+                        <div class="input-field">
+<input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="image_scan" id="file_input" type="file">
+
+                        </div>
+                            <label for="study_quality">Pdf File</label>
+                            <div class="input-field">
+<input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" name="pdf" type="file">
+
+                        </div>
+                            <label for="study_quality">AVI File</label>
+                            <div class="input-field">
+<input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" name="avi" type="file">
+
+                        </div>
+
+
+                        </div>
+
+
+                        <button class="submit" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+<script src="{% static 'js/index.js' %}"></script>
+<script src="{% static 'js/new-case.js' %}"></script>
+
+<script>
+    let wallthickness = document.getElementById('wallthickness');
+    wallthickness.addEventListener('change',function() {
+        if (this.value==3) {
+            wallthickness.classList.add('flagged');
+        }
+        else {
+            wallthickness.classList.remove('flagged');
+        }
+    });
+
+    let systolic_function = document.getElementById('systolic_function');
+    systolic_function.addEventListener('change',function() {
+        if (this.value==4) {
+            systolic_function.classList.add('flagged');
+        }
+        else {
+            systolic_function.classList.remove('flagged');
+        }
+    });
+
+    let wall_motion_abnormality = document.getElementById('wall_motion_abnormality');
+    wall_motion_abnormality.addEventListener('change',function() {
+        if (this.value==1) {
+            wall_motion_abnormality.classList.add('flagged');
+        }
+        else {
+            wall_motion_abnormality.classList.remove('flagged');
+        }
+    });
+
+    let diastolic_function = document.getElementById('diastolic_function');
+    diastolic_function.addEventListener('change',function() {
+        if (this.value==4) {
+            diastolic_function.classList.add('flagged');
+        }
+        else {
+            diastolic_function.classList.remove('flagged');
+        }
+    });
+
+    let left_atrium_size = document.getElementById('left_atrium_size');
+    left_atrium_size.addEventListener('change',function() {
+        if (this.value==2) {
+            left_atrium_size.classList.add('flagged');
+        }
+        else {
+            left_atrium_size.classList.remove('flagged');
+        }
+    });
+
+    let smoky_pattern = document.getElementById('smoky_pattern');
+    smoky_pattern.addEventListener('change',function() {
+        if (this.value == 1) {
+            smoky_pattern.classList.add('flagged');
+        }
+        else {
+            smoky_pattern.classList.remove('flagged');
+        }
+    });
+
+    let rv_size = document.getElementById('rv_size');
+    rv_size.addEventListener('change',function() {
+        if (this.value==4) {
+            rv_size.classList.add('flagged');
+        }
+        else {
+            rv_size.classList.remove('flagged');
+        }
+    });
+
+    let rv_function = document.getElementById('rv_function');
+    rv_function.addEventListener('change',function() {
+        if (this.value==4) {
+            rv_function.classList.add('flagged');
+        }
+        else {
+            rv_function.classList.remove('flagged');
+        }
+    });
+
+    let mitral_stenosis = document.getElementById('mitral_stenosis');
+    mitral_stenosis.addEventListener('change',function() {
+        if (this.value==4) {
+            mitral_stenosis.classList.add('flagged');
+        }
+        else {
+            mitral_stenosis.classList.remove('flagged');
+        }
+    });
+
+    let mitral_regurgitation = document.getElementById('mitral_regurgitation');
+    mitral_regurgitation.addEventListener('change',function() {
+        if (this.value==4) {
+            mitral_regurgitation.classList.add('flagged');
+        }
+        else {
+            mitral_regurgitation.classList.remove('flagged');
+        }
+    });
+
+    let aortic_stenosis = document.getElementById('aortic_stenosis');
+    aortic_stenosis.addEventListener('change',function() {
+        if (this.value==4) {
+            aortic_stenosis.classList.add('flagged');
+        }
+        else {
+            aortic_stenosis.classList.remove('flagged');
+        }
+    });
+
+    let aortic_regurgitation = document.getElementById('aortic_regurgitation');
+    aortic_regurgitation.addEventListener('change',function() {
+        if (this.value==4) {
+            aortic_regurgitation.classList.add('flagged');
+        }
+        else {
+            aortic_regurgitation.classList.remove('flagged');
+        }
+    });
+
+    let tricuspid_stenosis = document.getElementById('tricuspid_stenosis');
+    tricuspid_stenosis.addEventListener('change',function() {
+        if (this.value==4) {
+            tricuspid_stenosis.classList.add('flagged');
+        }
+        else {
+            tricuspid_stenosis.classList.remove('flagged');
+        }
+    });
+
+    let tricuspid_regurgitation = document.getElementById('tricuspid_regurgitation');
+    tricuspid_regurgitation.addEventListener('change',function() {
+        if (this.value==4) {
+            tricuspid_regurgitation.classList.add('flagged');
+        }
+        else {
+            tricuspid_regurgitation.classList.remove('flagged');
+        }
+    });
+
+
+    let pulmonary_stenosis = document.getElementById('pulmonary_stenosis');
+    pulmonary_stenosis.addEventListener('change',function() {
+        if (this.value==4) {
+            pulmonary_stenosis.classList.add('flagged');
+        }
+        else {
+            pulmonary_stenosis.classList.remove('flagged');
+        }
+    });
+
+    let pulmonary_regurgitation = document.getElementById('pulmonary_regurgitation');
+    pulmonary_regurgitation.addEventListener('change',function() {
+        if (this.value==4) {
+            pulmonary_regurgitation.classList.add('flagged');
+        }
+        else {
+            pulmonary_regurgitation.classList.remove('flagged');
+        }
+    });
+
+    let aorta = document.getElementById('aorta');
+    aorta.addEventListener('change',function() {
+        if (this.value==6) {
+            aorta.classList.add('flagged');
+        }
+        else {
+            aorta.classList.remove('flagged');
+        }
+    });
+
+    let ias = document.getElementById('ias');
+    ias.addEventListener('change',function() {
+        if (this.value==2) {
+            ias.classList.add('flagged');
+        }
+        else {
+            ias.classList.remove('flagged');
+        }
+    });
+
+    let ivs = document.getElementById('ivs');
+    ivs.addEventListener('change',function() {
+        if (this.value==2) {
+            ivs.classList.add('flagged');
+        }
+        else {
+            ivs.classList.remove('flagged');
+        }
+    });
+
+
+    let mass_device = document.getElementById('mass_device');
+    mass_device.addEventListener('change',function() {
+        if (this.value==2) {
+            mass_device.classList.add('flagged');
+        }
+        else {
+            mass_device.classList.remove('flagged');
+        }
+    });
+
+
+    let pericardium = document.getElementById('pericardium');
+    pericardium.addEventListener('change',function() {
+        if (this.value==4 || this.value==5) {
+            pericardium.classList.add('flagged');
+        }
+        else {
+            pericardium.classList.remove('flagged');
+        }
+    });
+
+    let lv_diastolic_diameter = document.getElementById('lv_diastolic_diameter');
+    lv_diastolic_diameter.addEventListener('change',function() {
+        console.log(this.value)
+        if (this.value >= 6.1 || this.value <= 4.2) {
+            lv_diastolic_diameter.classList.add('flagged');
+        }
+        else {
+            lv_diastolic_diameter.classList.remove('flagged');
+        }
+    });
+
+    let lv_diastolic_diameter_bsa = document.getElementById('lv_diastolic_diameter_bsa');
+    lv_diastolic_diameter_bsa.addEventListener('change',function() {
+        if (this.value >= 3.6) {
+            lv_diastolic_diameter_bsa.classList.add('flagged');
+        }
+        else {
+            lv_diastolic_diameter_bsa.classList.remove('flagged');
+        }
+    });
+
+    let lv_systolic_diameter = document.getElementById('lv_systolic_diameter');
+    lv_systolic_diameter.addEventListener('change',function() {
+        if (this.value >= 3.6) {
+            lv_systolic_diameter.classList.add('flagged');
+        }
+        else {
+            lv_systolic_diameter.classList.remove('flagged');
+        }
+    });
+
+    let lv_systolic_diameter_bsa = document.getElementById('lv_systolic_diameter_bsa');
+    lv_systolic_diameter_bsa.addEventListener('change',function() {
+        if (this.value >= 2.5) {
+            lv_systolic_diameter_bsa.classList.add('flagged');
+        }
+        else {
+            lv_systolic_diameter_bsa.classList.remove('flagged');
+        }
+    });
+
+    let lv_diastolic_volume = document.getElementById('lv_diastolic_volume');
+    lv_diastolic_volume.addEventListener('change',function() {
+        if (this.value >= 140 || this.value <= 46) {
+            lv_diastolic_volume.classList.add('flagged');
+        }
+        else {
+            lv_diastolic_volume.classList.remove('flagged');
+        }
+    });
+
+    let lv_diastolic_volume_bsa = document.getElementById('lv_diastolic_volume_bsa');
+    lv_diastolic_volume_bsa.addEventListener('change',function() {
+        if (this.value >= 100 || this.value <= 62) {
+            lv_diastolic_volume_bsa.classList.add('flagged');
+        }
+        else {
+            lv_diastolic_volume_bsa.classList.remove('flagged');
+        }
+    });
+
+    let lv_systolic_volume = document.getElementById('lv_systolic_volume');
+    lv_systolic_volume.addEventListener('change',function() {
+        if (this.value >= 76 || this.value <= 21) {
+            lv_systolic_volume.classList.add('flagged');
+        }
+        else {
+            lv_systolic_volume.classList.remove('flagged');
+        }
+    });
+
+    let lv_systolic_volume_bsa = document.getElementById('lv_systolic_volume_bsa');
+    lv_systolic_volume_bsa.addEventListener('change',function() {
+        if (this.value >= 45 || this.value <= 14) {
+            lv_systolic_volume_bsa.classList.add('flagged');
+        }
+        else {
+            lv_systolic_volume_bsa.classList.remove('flagged');
+        }
+    });
+
+    let septal_wall_thickness = document.getElementById('septal_wall_thickness');
+    septal_wall_thickness.addEventListener('change',function() {
+        if (this.value >= 0.9 || this.value <= 0.6) {
+            septal_wall_thickness.classList.add('flagged');
+        }
+        else {
+            septal_wall_thickness.classList.remove('flagged');
+        }
+    });
+
+
+    let posterior_wall_thickness = document.getElementById('posterior_wall_thickness');
+    posterior_wall_thickness.addEventListener('change',function() {
+        if (this.value >= 0.9 || this.value <= 0.6) {
+            posterior_wall_thickness.classList.add('flagged');
+        }
+        else {
+            posterior_wall_thickness.classList.remove('flagged');
+        }
+    });
+
+    let lv_mass = document.getElementById('lv_mass');
+    lv_mass.addEventListener('change',function() {
+        if (this.value >= 210 || this.value <= 88) {
+            lv_mass.classList.add('flagged');
+        }
+        else {
+            lv_mass.classList.remove('flagged');
+        }
+    });
+
+    let lv_mass_bsa = document.getElementById('lv_mass_bsa');
+    lv_mass_bsa.addEventListener('change',function() {
+        if (this.value >= 116 || this.value <= 49) {
+            lv_mass_bsa.classList.add('flagged');
+        }
+        else {
+            lv_mass_bsa.classList.remove('flagged');
+        }
+    });
+
+    let lv_mass_2d_method = document.getElementById('lv_mass_2d_method');
+    lv_mass_2d_method.addEventListener('change',function() {
+        if (this.value >= 115 || this.value <= 49) {
+            lv_mass_2d_method.classList.add('flagged');
+        }
+        else {
+            lv_mass_2d_method.classList.remove('flagged');
+        }
+    });
+
+    let lv_mass_bsa_2d_method = document.getElementById('lv_mass_bsa_2d_method');
+    lv_mass_bsa_2d_method.addEventListener('change',function() {
+        if (this.value >= 120 || this.value <= 50) {
+            lv_mass_bsa_2d_method.classList.add('flagged');
+        }
+        else {
+            lv_mass_bsa_2d_method.classList.remove('flagged');
+        }
+    });
+
+    let rv_basal_diameter = document.getElementById('rv_basal_diameter');
+    rv_basal_diameter.addEventListener('change',function() {
+        if ( 25 > this.value || this.value > 41) {
+            rv_basal_diameter.classList.add('flagged');
+        }
+        else {
+            rv_basal_diameter.classList.remove('flagged');
+        }
+    });
+
+    let rv_mid_diameter = document.getElementById('rv_mid_diameter');
+    rv_mid_diameter.addEventListener('change',function() {
+        if ( 19 > this.value || this.value > 35) {
+            rv_mid_diameter.classList.add('flagged');
+        }
+        else {
+            rv_mid_diameter.classList.remove('flagged');
+        }
+    });
+
+    let annulus = document.getElementById('annulus');
+    annulus.addEventListener('change',function() {
+        if ( 2.1 > this.value || this.value > 2.9) {
+            annulus.classList.add('flagged');
+        }
+        else {
+            annulus.classList.remove('flagged');
+        }
+    });
+
+    let sinuses_of_valsalva = document.getElementById('sinuses_of_valsalva');
+    sinuses_of_valsalva.addEventListener('change',function() {
+        if ( 2.1 > this.value || this.value > 3.2) {
+            sinuses_of_valsalva.classList.add('flagged');
+        }
+        else {
+            sinuses_of_valsalva.classList.remove('flagged');
+        }
+    });
+
+    let sinotublar_junction = document.getElementById('sinotublar_junction');
+    sinotublar_junction.addEventListener('change',function() {
+        if ( 2.6 > this.value || this.value > 3.2) {
+            sinotublar_junction.classList.add('flagged');
+        }
+        else {
+            sinotublar_junction.classList.remove('flagged');
+        }
+    });
+
+    let proximal_ascending_aorta = document.getElementById('proximal_ascending_aorta');
+    proximal_ascending_aorta.addEventListener('change',function() {
+        if ( 2.3 > this.value || this.value > 3.2) {
+            proximal_ascending_aorta.classList.add('flagged');
+        }
+        else {
+            proximal_ascending_aorta.classList.remove('flagged');
+        }
+    });
+
+    let lv_mass_linear_method = document.getElementById('lv_mass_linear_method');
+    lv_mass_linear_method.addEventListener('change',function() {
+        if ( 67 <= this.value || this.value > 224) {
+            lv_mass_linear_method.classList.add('flagged');
+        }
+        else {
+            lv_mass_linear_method.classList.remove('flagged');
+        }
+    });
+
+    let lv_mass_bsa_linear_method = document.getElementById('lv_mass_bsa_linear_method');
+    lv_mass_bsa_linear_method.addEventListener('change',function() {
+        if ( 43 > this.value || this.value > 115) {
+            lv_mass_bsa_linear_method.classList.add('flagged');
+        }
+        else {
+            lv_mass_bsa_linear_method.classList.remove('flagged');
+        }
+    });
+
+
+    let left_ventricular = document.getElementById('left_ventricular');
+    left_ventricular.addEventListener('change',function() {
+        if ( this.value == 3) {
+            left_ventricular.classList.add('flagged');
+        }
+        else {
+            left_ventricular.classList.remove('flagged');
+        }
+    });
+
+    let global_ef = document.getElementById('global_ef');
+    global_ef.addEventListener('change',function() {
+        if ( this.value < 50) {
+            global_ef.classList.add('flagged');
+        }
+        else {
+            global_ef.classList.remove('flagged');
+        }
+    });
+
+    let ef_by_simpson_method = document.getElementById('ef_by_simpson_method');
+    ef_by_simpson_method.addEventListener('change',function() {
+        if ( this.value < 50) {
+            ef_by_simpson_method.classList.add('flagged');
+        }
+        else {
+            ef_by_simpson_method.classList.remove('flagged');
+        }
+    });
+
+    let asymmetric_septal_hypertrophy = document.getElementById('asymmetric_septal_hypertrophy');
+    asymmetric_septal_hypertrophy.addEventListener('change',function() {
+        if ( this.value == 3) {
+            asymmetric_septal_hypertrophy.classList.add('flagged');
+        }
+        else {
+            asymmetric_septal_hypertrophy.classList.remove('flagged');
+        }
+    });
+
+    let wmsiaverage = document.getElementById('wmsiaverage');
+    wmsiaverage.addEventListener('change',function() {
+        if ( this.value > 1 ) {
+            wmsiaverage.classList.add('flagged');
+        }
+        else {
+            wmsiaverage.classList.remove('flagged');
+        }
+    });
+
+        let lv_ef = document.getElementById('lv_ef');
+    lv_ef.addEventListener('change',function() {
+        if ( this.value < 50 ) {
+            lv_ef.classList.add('flagged');
+        }
+        else {
+            lv_ef.classList.remove('flagged');
+        }
+    });
+
+
+
+    let la_pressure = document.getElementById('la_pressure');
+    la_pressure.addEventListener('change',function() {
+        if ( this.value == 2 ) {
+            la_pressure.classList.add('flagged');
+        }
+        else {
+            la_pressure.classList.remove('flagged');
+        }
+    });
+
+    let right_atrium_size = document.getElementById('right_atrium_size');
+    right_atrium_size.addEventListener('change',function() {
+        if ( this.value == 2 ) {
+            right_atrium_size.classList.add('flagged');
+        }
+        else {
+            right_atrium_size.classList.remove('flagged');
+        }
+    });
+
+        let aortic_valve_morphology = document.getElementById('aortic_valve_morphology');
+    aortic_valve_morphology.addEventListener('change',function() {
+        if ( this.value == 2 || this.value == 3 || this.value == 4 || this.value == 5) {
+            aortic_valve_morphology.classList.add('flagged');
+        }
+        else {
+            aortic_valve_morphology.classList.remove('flagged');
+        }
+    });
+
+
+
+
+    let ra_pressure = document.getElementById('ra_pressure');
+    ra_pressure.addEventListener('change',function() {
+        if ( this.value == 2 ) {
+            ra_pressure.classList.add('flagged');
+        }
+        else {
+            ra_pressure.classList.remove('flagged');
+        }
+    });
+
+    let mitral_valve_morphology = document.getElementById('mitral_valve_morphology');
+    mitral_valve_morphology.addEventListener('change',function() {
+        if ( this.value == 2 || this.value == 3 || this.value == 4 ) {
+            mitral_valve_morphology.classList.add('flagged');
+        }
+        else {
+            mitral_valve_morphology.classList.remove('flagged');
+        }
+    });
+
+    let tricuspid_valve_morphology = document.getElementById('tricuspid_valve_morphology');
+    tricuspid_valve_morphology.addEventListener('change',function() {
+        if ( this.value == 2 || this.value == 3) {
+            tricuspid_valve_morphology.classList.add('flagged');
+        }
+        else {
+            tricuspid_valve_morphology.classList.remove('flagged');
+        }
+    });
+
+    let pulmonary_valve_morphology = document.getElementById('pulmonary_valve_morphology');
+    pulmonary_valve_morphology.addEventListener('change',function() {
+        if ( this.value == 2 || this.value == 3) {
+            pulmonary_valve_morphology.classList.add('flagged');
+        }
+        else {
+            pulmonary_valve_morphology.classList.remove('flagged');
+        }
+    });
+
+    let pulmonary_artery = document.getElementById('pulmonary_artery');
+    pulmonary_artery.addEventListener('change',function() {
+        if ( this.value == 2 ) {
+            pulmonary_artery.classList.add('flagged');
+        }
+        else {
+            pulmonary_artery.classList.remove('flagged');
+        }
+    });
+
+    let recommendation = document.getElementById('recommendation');
+    recommendation.addEventListener('change',function() {
+        if ( this.value == 1 || this.value == 2 ) {
+            recommendation.classList.add('flagged');
+            recommendation.classList.remove('orange_flag');
+        } else if (this.value == 3) { recommendation.classList.add('orange_flag'); }  else {
+            recommendation.classList.remove('flagged');
+            recommendation.classList.remove('orange_flag');
+        }
+    });
+
+
+
+
+</script>
+
+<script>
+
+    let fields = {
+        basal_anterior:0,
+        basal_anteroseptal:0,
+        basal_inferoseptal:0,
+        basal_inferior:0,
+        basal_inferolateral:0,
+        basal_anterolateral:0,
+        mid_anterior:0,
+        mid_anteroseptal:0,
+        mid_inferoseptal:0,
+        mid_inferior:0,
+        mid_inferolateral:0,
+        mid_anterolateral:0,
+        apical_anterior:0,
+        apical_septal:0,
+        apical_inferior:0,
+        apical_lateral:0,
+        apex:0
+    }
+
+    let sum = 0;
+
+    function wmsi(e) {
+        fields[e.name] = parseInt(e.value);
+        let sum = Object.values(fields).reduce((a, b) => a + b, 0);
+        let average = sum/17;
+        let average_field = document.getElementById('wmsiaverage');
+        average_field.value = average.toFixed(1);
+
+        if (average.toFixed(1) > 1 ) {
+            wmsiaverage.classList.add('flagged');
+        } else if (average.toFixed(1) < 1 ) {
+            wmsiaverage.classList.remove('flagged');
+        }
+
+    }
+</script>
+  <script src="{% static 'js/multiselect-dropdown.js' %}"></script>
+</body>
+</html>

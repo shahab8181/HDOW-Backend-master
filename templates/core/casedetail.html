@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+
+<html lang="en">
+  {% include "components/head.html" %}
+  <body>
+    {% include 'components/navbar.html' %}
+    <div class="flex overflow-hidden bg-white pt-16">
+      <aside
+        id="sidebar"
+        class="fixed hidden z-20 h-full top-0 left-0 pt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
+        aria-label="Sidebar"
+      >
+        <div
+          class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0"
+        >
+        {% include 'components/sidebar.html' %}
+        </div>
+      </aside>
+      <div
+        class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
+        id="sidebarBackdrop"
+      ></div>
+      <div
+        id="main-content"
+        class="h-full w-full relative overflow-y-auto lg:ml-64 flex justify-center items-center"
+      >
+        <main
+          id="wrapper"
+          class="relative w-full rounded-md p-7 bg-white shadow"
+        >
+          <header>{{case}}</header>
+            <br></br>
+        {% comment %} <form action="{% url 'casedetail' pk=study.client.id %}" method="POST"> {% endcomment %}
+            <form action="#" method="POST">
+        {% csrf_token %}
+                        <div class="form first">
+                    <div class="details cases">
+
+
+                    <span class="title"><b>Patient:</b> {{ study.related_study_set.client }}</span>
+                    <div class="fields case-detail"></div>
+
+                        <span class="title"><b>Personal Details</b></span>
+
+                        <div class="fields case-detail">
+                            <div class="input-field">
+                                <label>Weight (kg)</label>
+                                {{ study.related_study_set.related_study.weight }}
+                            </div>
+
+                            <div class="input-field">
+                                <label>BMI</label>
+                                {{ study.related_study_set.related_study.bmi|floatformat:2|intcomma }}
+                            </div>
+
+                            <div class="input-field">
+                                <label>BSI</label>
+                                {{ study.related_study_set.related_study.bsa|floatformat:2|intcomma }}
+                            </div>
+
+
+
+                            <div class="input-field">
+                                <label>Height (CM)</label>
+                                {{ study.related_study_set.related_study.height }}
+                            </div>
+
+
+
+                            <div class="input-field">
+                                <label>SBP</label>
+{{ study.related_study_set.related_study.sbp }}
+                            </div>
+
+                            <div class="input-field">
+                                <label>DBP</label>
+{{ study.related_study_set.related_study.dbp }}
+                            </div>
+
+
+                            <div class="input-field">
+                                <label>Complaint</label>
+{{ study.related_study_set.get_complaint_selected_display }}
+                            </div>
+
+                            <div class="input-field">
+                                <label>Complaint (Others)</label>
+{{ study.related_study_set.complaint_description }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="details cases">
+                            <div class="details cases">
+
+                                <span class="title"><b>Left Ventricular</b></span>
+                                <div class="fields">
+                                <div class="input-field">
+                                <label for="patient">Left Ventricular</label>
+                                    <div class="{% if 'left_ventricular' in case.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_left_ventricular_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                <label for="wall_thickness">Wall Thickness</label>
+                                    <div class="{% if 'wall_thickness' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_wall_thickness_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                <label for="patient">Systolic DysFunction</label>
+                                    <div class="{% if 'systolic_function' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_systolic_function_display }}
+                                    </div>
+
+                                </div>
+
+                                <div class="input-field">
+                                    <label>Global EF (%)</label>
+
+                                    <div class="{% if 'global_ef' in case.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.global_ef }}
+                                    </div>
+
+                                </div>
+
+                                <div class="input-field">
+                                    <label>EF by Simpson Method</label>
+                                    <div class="{% if 'ef_by_simpson_method' in case.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.ef_by_simpson_method }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="diastolic_function">Diastolic Function</label>
+                                    <div class="{% if 'diastolic_function' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        <div class="{% if 'diastolic_function' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_diastolic_function_display }}
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                <label for="diastolic_function">Asymmetric Septal Hypertrophy</label>
+                                    <div class="{% if 'asymmetric_septal_hypertrophy' in case.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ case.related_study.get_asymmetric_septal_hypertrophy_display }}
+                                    </div>
+                                </div>
+
+                                    <div class="input-field">
+                                    <label for="wall_motion_abnormality">Wall Motion Abnormality</label>
+                                        <div class="{% if 'wall_motion_abnormality' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_wall_motion_abnormality_display }}
+                                    </div>
+
+                                </div>
+                                <div class="input-field"></div>
+
+                                </div>
+                            </div>
+                            <br></br>
+                            <span class="title"><b>Left Atrium</b></span>
+                            <div class="fields case-detail">
+
+                                <div class="input-field">
+                                    <label for="left_atrium_size">Left Atrium Size</label>
+                                    <div class="{% if 'left_atrium_size' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_left_atrium_size_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="la_pressure">LA Pressure</label>
+                                    <div class="{% if 'la_pressure' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_la_pressure_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="smoky_pattern">Smoky Pattern</label>
+                                    <div class="{% if 'smoky_pattern' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.get_smoky_pattern_display }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="title">Right Atrium</span>
+                            <div class="fields case-detail">
+
+                                <div class="input-field">
+                                    <label for="right_atrium_size">Right Atrium Size</label>
+                                    <div class="{% if 'right_atrium_size' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_right_atrium_size_display }}
+                                    </div>
+
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="right_atrium_size">RA Pressure</label>
+                                    <div class="{% if 'ra_pressure' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_ra_pressure_display }}
+                                    </div>
+                                </div>
+                            <div class="input-field"></div>
+                            </div>
+                            <br></br>
+                            <span class="title"><b>Right Ventricle</b></span>
+                            <div class="fields case-detail">
+                                <div class="input-field">
+                                    <label for="rv_size">Right Ventricle Size</label>
+                                    <div class="{% if 'rv_size' in study.related_study.flagged_fields %}flagged{% endif %}">
+{{ study.related_study_set.related_study.get_rv_size_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="rv_function">Right Ventricle Function</label>
+                                    <div class="{% if 'rv_function' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                            {{ study.related_study_set.related_study.get_rv_function_display }}
+                                    </div>
+
+                                </div>
+                            <div class="input-field"></div>
+                            </div>
+
+                            <span class="title">Mitral Valve</span>
+                            <div class="fields case-detail">
+                                <div class="input-field">
+                                    <label for="mitral_valve_morphology">Morphology</label>
+                                    <div class="{% if 'mitral_valve_morphology' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_mitral_valve_morphology_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mvg_peak">MVG Peak</label>
+                                    <div class="{% if 'mvg_peak' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.mvg_peak }}
+                                    </div>
+
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mvg_mean">MVG Mean</label>
+                                    <div class="{% if 'mvg_mean' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.mvg_peak }}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="input-field">
+                                    <label for="mitral_stenosis">Mitral Stenosis</label>
+                                    <div class="{% if 'mitral_stenosis' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_mitral_stenosis_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="mitral_regurgitation">Mitral Regurgitation</label>
+                                    <div class="{% if 'mitral_regurgitation' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_mitral_regurgitation_display }}
+                                    </div>
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+
+                            <span class="title">Aortic Valve</span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label for="aortic_valve_morphology">Morphology</label>
+                                    <div class="{% if 'aortic_valve_morphology' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_aortic_valve_morphology_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="avg_peak">AVG Peak</label>
+                                    <div class="{% if 'avg_peak' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.avg_peak}}
+                                    </div>
+                                </div>
+                                <div class="input-field">
+                                    <label for="mvg_peak">AVG Mean</label>
+                                    <div class="{% if 'avg_mean' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.avg_mean }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="aortic_stenosis">Aortic Stenosis</label>
+                                    <div class="{% if 'aortic_stenosis' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_aortic_stenosis_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="aortic_regurgitation">Aortic Regurgitation</label>
+                                    <div class="{% if 'aortic_regurgitation' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_aortic_regurgitation_display }}
+                                    </div>
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+                            <br></br>
+                            <span class="title"><b>Tricuspid Valve</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="tricuspid_valve_morphology">Morphology</label>
+                                    <div class="{% if 'tricuspid_valve_morphology' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_tricuspid_valve_morphology_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="tricuspid_stenosis">Tricuspid Stenosis</label>
+                                    <div class="{% if 'tricuspid_stenosis' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_tricuspid_stenosis_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="tricuspid_stenosis">Tricuspid Regurgitation</label>
+                                    <div class="{% if 'tricuspid_regurgitation' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                {{ study.related_study_set.related_study.get_tricuspid_regurgitation_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                <label>TRPG (mmHg)</label>
+                                    <div class="{% if 'trpg' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.trpg }}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <br></br>
+                            <span class="title"><b>Pulmonary Valve</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="pulmonary_valve_morphology">Morphology</label>
+                                    <div class="{% if 'pulmonary_valve_morphology' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_pulmonary_valve_morphology_display }}
+                                    </div>
+                                </div>
+                                <div class="input-field">
+                                    <label for="pulmonary_stenosis">Pulmonary Stenosis</label>
+                                    <div class="{% if 'pulmonary_stenosis' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_pulmonary_stenosis_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="pulmonary_stenosis">Pulmonary Regurgitation</label>
+                                    <div class="{% if 'pulmonary_regurgitation' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_pulmonary_regurgitation_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                <label>PG</label>
+                                    <div class="{% if 'pg' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.pg }}
+                                    </div>
+                            </div>
+
+                            </div>
+                            <br></br>
+                            <span class="title"><b>Great Vessels</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="aorta">Aorta</label>
+                                    <div class="{% if 'aorta' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_aorta_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="pulmonary_artery">Pulmonary Artery</label>
+                                    <div class="{% if 'pulmonary_artery' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_pulmonary_artery_display }}
+                                    </div>
+                                </div>
+                                <div class="input-field"></div>
+
+                            </div>
+
+                            <span class="title">IAS</span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mass_device">IAS</label>
+                                    <div class="{% if 'ias' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_ias_display }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <span class="title">IVS</span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mass_device">IVS</label>
+                                    <div class="{% if 'ivs' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_ivs_display }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br></br>
+                            <span class="title"><b>Mass/Device</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="mass_device">Mass/Device</label>
+                                    <div class="{% if 'mass_device' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_mass_device_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="message">Description</label>
+{{ study.related_study_set.related_study.get_massdevice_description_display }}
+                                </div>
+                            <div class="input-field"></div>
+
+                            </div>
+
+                            </div>
+
+                            <span class="title">Pericardium</span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label for="pericardium">Pericardium Mass/Device</label>
+                                    <div class="{% if 'pericardium' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.get_pericardium_display }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="message">Description</label>
+{{ study.related_study_set.related_study.pericardium_description }}
+                                </div>
+                            <div class="input-field"></div>
+
+                            </div>
+                        <br></br>
+                        <span class="title"><b>LV Dimension</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>LV Diastolic Diameter</label>
+                                    <div class="{% if 'lv_diastolic_diameter' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_diastolic_diameter }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Diastolic BSA</label>
+                                    <div class="{% if 'lv_diastolic_diameter_bsa' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_diastolic_diameter_bsa }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Diameter</label>
+                                    <div class="{% if 'lv_systolic_diameter' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_systolic_diameter }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Diameter BSA</label>
+                                    <div class="{% if 'lv_systolic_diameter_bsa' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_systolic_diameter_bsa }}
+                                    </div>
+                                </div>
+                            </div>
+                        <br></br>
+                        <span class="title"><b>LV Volume</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>LV Diastolic Volume</label>
+                                    <div class="{% if 'lv_diastolic_volume' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_diastolic_volume }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Diastolic Volume BSA</label>
+                                    <div class="{% if 'lv_diastolic_volume_bsa' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_diastolic_volume_bsa }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Volume</label>
+                                    <div class="{% if 'lv_systolic_volume' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_systolic_volume }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Systolic Volume BSA</label>
+                                    <div class="{% if 'lv_systolic_volume_bsa' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_systolic_volume_bsa }}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <br></br>
+                        <span class="title"><b>LV Function</b></span>
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label>LV EF</label>
+                                    <div class="{% if 'lv_ef' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_ef }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        <br></br>
+                        <span class="title"><b>LV Mass by Linear Method</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>Septal Wall Thickness</label>
+                                    <div class="{% if 'septal_wall_thickness' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.septal_wall_thickness }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>Posterior Wall Thickness</label>
+                                    <div class="{% if 'posterior_wall_thickness' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.posterior_wall_thickness }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Mass</label>
+                                    <div class="{% if 'lv_mass' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                    {{ study.related_study_set.related_study.lv_mass }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Mass BSA</label>
+                                    <div class="{% if 'lv_mass_bsa' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.lv_mass_bsa }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <span class="title">LV Mass by 2D Method</span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                    <label>LV Mass by 2D Method</label>
+                                    <div class="{% if 'lv_mass_2d_method' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.lv_mass_2d_method }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                    <label>LV Mass BSA by 2D Method</label>
+                                    <div class="{% if 'lv_mass_bsa_2d_method' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.lv_mass_bsa_2d_method }}
+                                    </div>
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+
+                            <div class="fields">
+                                <div class="input-field">
+                                        <label>RV Basal Diameter</label>
+                                    <div class="{% if 'rv_basal_diameter' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.rv_basal_diameter }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                        <label>RV Mid Diameter</label>
+                                    <div class="{% if 'rv_mid_diameter' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.rv_mid_diameter }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Annulus</label>
+                                    <div class="{% if 'annulus' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.annulus }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Sinuses Of Valsalva</label>
+                                    <div class="{% if 'sinuses_of_valsalva' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.sinuses_of_valsalva }}
+                                    </div>
+                                </div>
+                                <div class="input-field">
+                                        <label>Sinotublar Junction</label>
+                                    <div class="{% if 'sinotublar_junction' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.sinotublar_junction }}
+                                    </div>
+                                </div>
+                                <div class="input-field">
+                                        <label>Proximal Ascending Aorta</label>
+                                    <div class="{% if 'proximal_ascending_aorta' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.proximal_ascending_aorta }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                        <label>LV Mass Linear Method</label>
+                                    <div class="{% if 'lv_mass_linear_method' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.lv_mass_linear_method }}
+                                    </div>
+                                </div>
+
+                                <div class="input-field">
+                                        <label>LV Mass BSA Linear Method</label>
+                                    <div class="{% if 'lv_mass_bsa_linear_method' in study.related_study.flagged_fields %}flagged{% endif %}">
+                                        {{ study.related_study_set.related_study.lv_mass_bsa_linear_method }}
+                                    </div>
+                                </div>
+                                <div class="input-field"></div>
+                            </div>
+
+                        <br></br>
+                        <span class="title"><b>17-Segment left ventricular Map</b></span>
+                            <div class="fields">
+
+                                <div class="input-field">
+                                        <label>Basal Anterior</label>
+{{ study.related_study_set.related_study.basal_anterior }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Anteroseptal</label>
+{{ study.related_study_set.related_study.basal_anteroseptal }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Inferoseptal</label>
+{{ study.related_study_set.related_study.basal_inferoseptal }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Inferior</label>
+{{ study.related_study_set.related_study.basal_inferior }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Inferolateral</label>
+{{ study.related_study_set.related_study.basal_inferolateral }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Basal Anterolateral</label>
+{{ study.related_study_set.related_study.basal_anterolateral }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Anterior</label>
+{{ study.related_study_set.related_study.mid_anterior }}
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Anteroseptal</label>
+{{ study.related_study_set.related_study.mid_anteroseptal }}
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Inferoseptal</label>
+{{ study.related_study_set.related_study.mid_inferoseptal }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Inferior</label>
+{{ study.related_study_set.related_study.mid_inferior }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Inferolateral</label>
+{{ study.related_study_set.related_study.mid_inferolateral }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Mid Anterolateral</label>
+{{ study.related_study_set.related_study.mid_anterolateral }}
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Anterior</label>
+{{ study.related_study_set.related_study.apical_anterior }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Septal</label>
+{{ study.related_study_set.related_study.apical_septal }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Inferior</label>
+{{ study.related_study_set.related_study.apical_inferior }}
+
+                                </div>
+
+                                <div class="input-field">
+                                        <label>Apical Lateral</label>
+{{ study.related_study_set.related_study.apical_lateral }}
+                                </div>
+                                <div class=" {% if study.related_study.segments_average > 1 %}flagged{% endif %} input-field"><b>17-Segment Average:</b> {{ study.related_study_set.related_study.segments_average|floatformat:2|intcomma }}</div>
+
+                                <div class="input-field">
+                                        <label>Apex</label>
+{{ study.related_study_set.related_study.apex }}
+
+                                </div>
+
+                                <div class="input-field"></div>
+
+
+                            </div>
+
+
+
+                            <div class="input-field">
+                            <label for="message">Description: </label>
+    {{ study.related_study_set.description }}
+                        </div>
+                        <br></br>
+                        <span class="title"><b>Study Quality</b></span>
+                            <div class="fields">
+                            <div class="input-field">
+                                <label for="study_quality">Study Quality</label>
+
+                            {% for case in study.related_study.study_quality.all %}
+                                {{ study.related_study_set.option }}
+                            {% endfor %}
+
+                            </div>
+                            <div class="input-field"></div>
+                        </div>
+                        <br></br>
+                        <span class="title"><b>Recommendation</b></span>
+                        <div class="input-field">
+                            {% if study.related_study.recommendation == 1 or study.related_study.recommendation == 2  %}
+                                <div style="color:red;">{{ study.related_study_set.related_study.get_recommendation_display }}</div>
+                            {% endif %}
+
+                            {% if study.related_study.recommendation == 3  %}
+                                <div style="color:orange;">{{ study.related_study_set.related_study.get_recommendation_display }}</div>
+                            {% endif %}
+
+
+                        </div>
+
+        <br></br>
+        <h6 class="text-xl font-bold dark:text-white">Case Info</h6>
+        <p class="mb-3 font-light text-gray-500 dark:text-gray-500"><b>Status:</b> {{study.get_status_display}}</p>
+        <p class="mb-3 font-light text-gray-500 dark:text-gray-500"><b>Technician:</b> {{study.technician}}</p>
+          
+          {{ form.as_p }}
+
+        </p>
+
+        <button class="submit" type="submit">Apply Changes</button>
+
+        </form>
+
+        </main>
+      </div>
+    </div>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/new-case.js' %}"></script>
+  <script>
+      let rate = document.getElementById('rate');
+    rate.addEventListener('change',function() {
+        if (this.value > 100 || this.value < 60) {
+            rate.classList.add('flagged');
+        }
+
+
+
+  </script>
+  </body>
+</html>

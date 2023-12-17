@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+{% include "components/head.html" %}
+  <body>
+    {% include "components/navbar.html" %}
+    <div class="flex overflow-hidden bg-white pt-16">
+      <aside
+        id="sidebar"
+        class="fixed hidden z-20 h-full top-0 left-0 pt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
+        aria-label="Sidebar"
+      >
+      <div
+      class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0"
+    >
+    {% include "components/sidebar.html" %}
+    </div>
+      </aside>
+      <div
+        class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10"
+        id="sidebarBackdrop"
+      ></div>
+      <div
+        id="main-content"
+        class="h-full w-full relative overflow-y-auto lg:ml-64 flex justify-center items-center"
+      >
+        <main
+          id="wrapper"
+          class="relative w-full rounded-md p-7 bg-white shadow"
+        >
+          <header>New Electrocardiogram</header>
+            {{form.errors}}
+          <form method="POST" action="{% url 'newecho' %}">
+            {% csrf_token %}
+            <div class="form first">
+                {% if error %}
+                    {{ error }}
+                {% endif %}
+              <div class="details cases">
+
+                    <span class="title">Patient</span>
+                    <div class="fields">
+                        <div class="input-field">
+                                <label for="patient">Patient</label>
+                                <select name="patient" id="patient">
+                                    <option selected disabled value="patient">
+                                        Select Patient
+                                    </option>
+                                    {% for patient in patients %}
+
+                                        <option value="{{ patient.account__id }}">{{ patient.account__first_name }} {{ patient.account__last_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                    </div>
+
+                  <span class="title">Referring MD</span>
+                    <div class="fields">
+                        <div class="input-field">
+                                <label for="patient">Reffering MD</label>
+                                <select name="referring_md" id="patient">
+                                    <option selected disabled value="patient">
+                                        Select MD
+                                    </option>
+                                    {% for md in referring_md %}
+
+                                        <option value="{{ md.id }}">{{ md }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                        <div class="input-field">
+                            <label for="patient">Reason for Test</label>
+                                <input
+                                        name="reason_for_test"
+                                        type="text"
+                                        placeholder="Enter Number"
+                                        rows="4"
+                                />
+                        </div>
+                    <div class="input-field"></div>
+
+                    </div>
+
+                  <span class="title">Rate</span>
+                    <div class="fields">
+                        <div class="input-field">
+                                <label for="patient">Rate</label>
+                                      <input
+                                        name="rate"
+                                        onkeypress="if (this.value.length > 2) return false;"
+                                        id="rate"
+                                        type="number"
+                                        placeholder="Enter Number"
+                                        required
+                                />
+                            </div>
+                    </div>
+
+                    <span class="title">Rhythm</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">NSR</label>
+                            <select name="nsr" id="nsr" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Sinus Tachycardia</label>
+                            <select name="sinus_tachycardia" id="sinus_tachycardia" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Sinus Bradycardia</label>
+                            <select name="sinus_bradycardia" id="sinus_bradycardia" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Atrial Tachycardia</label>
+                            <select name="atrial_bradycardia" id="atrial_bradycardia" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Supraventricular Tachycardia</label>
+                            <select name="supraventricular_bradycardia" id="supraventricular_bradycardia" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Narrow QRS Tachycardia</label>
+                            <select name="narrow_qs_tachycardia" id="narrow_qs_tachycardia" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>Wide QRS Tachycardia</label>
+                            <select name="wide_qs_tachycardia" id="wide_qs_tachycardia" class="patient">
+                                <option selected disabled value="nsr">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>VT</label>
+                            <select name="vt" id="vt" class="patient">
+                                <option selected disabled value="vt">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>VF</label>
+                            <select name="vf" id="vf" class="patient">
+                                <option selected disabled value="vf">
+                                    Select...
+                                </option>
+                                {% for value in echo.YES_OR_NO_CHOICE %}
+                                    <option value="{{ value.0 }}">{{ value.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">AVB</label>
+                            <select name="avb" class="patient" id="avb">
+                                <option selected disabled value="avb">
+                                    Select AVB
+                                </option>
+                                {% for avb in echo.AVB_CHOICES %}
+                                    <option value="{{ avb.0 }}">{{ avb.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-field"></div>
+
+                    </div>
+
+
+                    <span class="title">Axis</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">Axis</label>
+                            <select name="axis" class="patient" id="axis">
+                                <option selected disabled value="avb">
+                                    Select AVB
+                                </option>
+                                {% for axis in echo.AXIS_CHOICES %}
+                                    <option value="{{ axis.0 }}">{{ axis.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <span class="title">P-Wave</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">P-Wave Appearance</label>
+                            <select name="p_wave_appearance" id="p_wave_appearance" class="patient">
+                                <option selected disabled value="pwave">
+                                    Select P-Wave
+                                </option>
+                                {% for pwave in echo.PWAVE_APPEARANCE_CHOICES %}
+                                    <option value="{{ pwave.0 }}">{{ pwave.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                        <label>PR Interval</label>
+                            <select name="pr_interval" id="pr_interval" class="patient">
+                                <option selected disabled value="interval">
+                                    Select Interval
+                                </option>
+                                {% for interval in echo.PR_INTERVAL_APPEARANCE_CHOICES %}
+                                    <option value="{{ interval.0 }}">{{ interval.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-field"></div>
+
+                    </div>
+
+                    <span class="title">Q-Wave</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">Q-Wave Appearance</label>
+                            <select name="q_wave_appearance" id="q_wave_appearance" class="patient">
+                                <option selected disabled value="qwave">
+                                    Select Q-Wave
+                                </option>
+                                {% for qwave in echo.QWAVE_APPEARANCE_CHOICES %}
+                                    <option value="{{ qwave.0 }}">{{ qwave.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Q-Wave Morphology</label>
+                            <select name="q_wave_morphology" id="q_wave_morphology" class="patient">
+                                <option selected disabled value="qwave">
+                                    Select Q-Wave
+                                </option>
+                                {% for qwave in echo.MORPHOLOGY_CHOICES %}
+                                    <option value="{{ qwave.0 }}">{{ qwave.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Location</label>
+                            <select name="location" multiple multiselect-hide-x="true">
+                                {% for option in location_options %}
+                                    <option value="{{ option.id }}">{{ option.option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <span class="title">QRS Complex</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">QRS Morphology</label>
+                            <select name="qrs_morphology" id="qrs_morphology" class="patient">
+                                <option selected disabled value="QRS">
+                                    Select QRS
+                                </option>
+                                {% for qrs in echo.QRS_MORPHOLOGY_CHOICES %}
+                                    <option value="{{ qrs.0 }}">{{ qrs.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">QRS Height</label>
+                            <select name="qrs_height" id="qrs_height" class="patient">
+                                <option selected disabled value="QRS">
+                                    Select QRS Height
+                                </option>
+                                {% for qrs in echo.QRS_HEIGHT_CHOICES %}
+                                    <option value="{{ qrs.0 }}">{{ qrs.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">QRS Pattern</label>
+                            <select name="qrs_pattern" id="qrs_pattern" class="patient">
+                                <option selected disabled value="QRS">
+                                    Select QRS Pattern
+                                </option>
+                                {% for qrs in echo.QRS_PATTERN_CHOICES %}
+                                    <option value="{{ qrs.0 }}">{{ qrs.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </div>
+
+                    </div>
+
+                    <span class="title">ST Segment</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">ST Segment</label>
+                            <select id="st_segment" name="st_segment" multiple multiselect-hide-x="true">
+                                {% for option in st_segment_options %}
+                                    <option value="{{ option.id }}">{{ option.option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+                        {% comment %} <div style="visibility:hidden;" id="elevation_field" class="input-field"> {% endcomment %}
+                        <div class="input-field">
+                        <label for="study_quality">Elevation</label>
+                            <select name="st_segment_elevation" multiple multiselect-hide-x="true">
+                                {% for option in st_segment_elevation_options %}
+                                    <option value="{{ option.id }}">{{ option.option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% comment %} </div> {% endcomment %}
+
+                        {% comment %} <div style="visibility:hidden;" id="depression_field" class="input-field"> {% endcomment %}
+                        <div class="input-field">
+                        <label for="study_quality">Depression</label>
+                            <select name="st_segment_depression" multiple multiselect-hide-x="true">
+                                {% for option in st_segment_depression_options %}
+                                    <option value="{{ option.id }}">{{ option.option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                    <span class="title">T Wave</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label for="study_quality">T Wave Morphology</label>
+                            <select name="t_wave_morphology" multiple multiselect-hide-x="true">
+                                {% for option in morphologyoptions %}
+                                    <option value="{{ option.id }}">{{ option.option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Strain Pattern</label>
+                            <select name="strain_problem" id="strain_problem" class="patient">
+                                <option selected disabled value="strain">
+                                    Select Value...
+                                </option>
+                                {% for strain in echo.STRAIN_PROBLEM_CHOICES %}
+                                    <option value="{{ strain.0 }}">{{ strain.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-field"></div>
+                    </div>
+
+                    <span class="title">QT Corrected Interval</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                        <label>QT</label>
+                                <input
+                                        name="qt"
+                                        id="qt"
+                                        type="number"
+                                        placeholder="Enter Number"
+                                        required
+                                />
+                        </div>
+
+                    </div>
+
+                <span class="title">Description</span>
+                    <div class="fields">
+
+                        <div class="input-field">
+                                <input
+                                        name="description"
+                                        type="text"
+                                        placeholder="Enter Number"
+                                        rows="4"
+                                />
+                        </div>
+
+                    </div>
+
+                <span class="title">Files</span>
+                    <div class="fields">
+                        <div class="input-field">
+                            <label for="study_quality">Image</label>
+                                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="image" id="file_input" type="file">
+                        </div>
+
+                        <div class="input-field">
+                            <label for="study_quality">Video</label>
+                                <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" name="video" id="file_input" type="file">
+                        </div>
+
+                        <div class="input-field"></div>
+
+                    </div>
+
+
+                    </div>
+
+
+            <button type="submit" class="submit">Create</button>
+
+          </form>
+        </main>
+      </div>
+    </div>
+
+  <script>
+          let rate = document.getElementById('rate');
+    rate.addEventListener('change',function() {
+        if (this.value > 100 || this.value < 60) {
+            rate.classList.add('flagged');
+        }
+        else {
+            rate.classList.remove('flagged');
+        }
+    });
+
+              let sinus_tachycardia = document.getElementById('sinus_tachycardia');
+    sinus_tachycardia.addEventListener('change',function() {
+        if (this.value == 1) {
+            sinus_tachycardia.classList.add('flagged');
+        }
+        else {
+            sinus_tachycardia.classList.remove('flagged');
+        }
+    });
+
+              let qt = document.getElementById('qt');
+    qt.addEventListener('change',function() {
+        if (this.value < 349 || this.value > 441) {
+            qt.classList.add('flagged');
+        }
+        else {
+            qt.classList.remove('flagged');
+        }
+    });
+
+
+    let sinus_bradycardia = document.getElementById('sinus_bradycardia');
+    sinus_bradycardia.addEventListener('change',function() {
+        if (this.value == 1) {
+            sinus_bradycardia.classList.add('flagged');
+        }
+        else {
+            sinus_bradycardia.classList.remove('flagged');
+        }
+    });
+
+
+   let avb = document.getElementById('avb');
+    avb.addEventListener('change',function() {
+        if (this.value != null) {
+            avb.classList.add('flagged');
+        }
+        else {
+            avb.classList.remove('flagged');
+        }
+    });
+
+   let atrial_bradycardia = document.getElementById('atrial_bradycardia');
+    atrial_bradycardia.addEventListener('change',function() {
+        if (this.value == 1) {
+            atrial_bradycardia.classList.add('flagged');
+        }
+        else {
+            atrial_bradycardia.classList.remove('flagged');
+        }
+    });
+
+   let supraventricular_bradycardia = document.getElementById('supraventricular_bradycardia');
+    supraventricular_bradycardia.addEventListener('change',function() {
+        if (this.value == 1) {
+            supraventricular_bradycardia.classList.add('flagged');
+        }
+        else {
+            supraventricular_bradycardia.classList.remove('flagged');
+        }
+    });
+
+   let narrow_qs_tachycardia = document.getElementById('narrow_qs_tachycardia');
+    narrow_qs_tachycardia.addEventListener('change',function() {
+        if (this.value == 1) {
+            narrow_qs_tachycardia.classList.add('flagged');
+        }
+        else {
+            narrow_qs_tachycardia.classList.remove('flagged');
+        }
+    });
+
+   let wide_qs_tachycardia = document.getElementById('wide_qs_tachycardia');
+    wide_qs_tachycardia.addEventListener('change',function() {
+        if (this.value == 1) {
+            wide_qs_tachycardia.classList.add('flagged');
+        }
+        else {
+            wide_qs_tachycardia.classList.remove('flagged');
+        }
+    });
+
+  let vt = document.getElementById('vt');
+    vt.addEventListener('change',function() {
+        if (this.value == 1) {
+            vt.classList.add('flagged');
+        }
+        else {
+            vt.classList.remove('flagged');
+        }
+    });
+
+  let vf = document.getElementById('vf');
+    vf.addEventListener('change',function() {
+        if (this.value == 1) {
+            vf.classList.add('flagged');
+        }
+        else {
+            vf.classList.remove('flagged');
+        }
+    });
+
+  let st_segment_elevation = document.getElementById('st_segment');
+    st_segment_elevation.addEventListener('change',function() {
+        if (this.value == 2 || this.value == 3) {
+            let elevation_field = document.getElementById("elevation_field");
+            let depression_field = document.getElementById("depression_field");
+            elevation_field.style.visibility = "visible";
+            depression_field.style.visibility = "visible";
+
+        } else {
+            elevation_field.style.visibility = "hidden";
+            depression_field.style.visibility = "hidden";
+        }
+    });
+
+
+
+ let q_wave_appearance = document.getElementById('q_wave_appearance');
+    q_wave_appearance.addEventListener('change',function() {
+        if (this.value == 2) {
+            q_wave_appearance.classList.add('flagged');
+        }
+        else {
+            q_wave_appearance.classList.remove('flagged');
+        }
+    });
+
+ let q_wave_morphology = document.getElementById('q_wave_morphology');
+    q_wave_morphology.addEventListener('change',function() {
+        if (this.value == 1) {
+            q_wave_morphology.classList.add('flagged');
+        }
+        else {
+            q_wave_morphology.classList.remove('flagged');
+        }
+    });
+
+    let qrs_morphology = document.getElementById('qrs_morphology');
+    qrs_morphology.addEventListener('change',function() {
+        if (this.value == 2) {
+            qrs_morphology.classList.add('flagged');
+        }
+        else {
+            qrs_morphology.classList.remove('flagged');
+        }
+    });
+
+        let qrs_height = document.getElementById('qrs_height');
+    qrs_height.addEventListener('change',function() {
+        if (this.value == 2 || this.value == 3) {
+            qrs_height.classList.add('flagged');
+        }
+        else {
+            qrs_height.classList.remove('flagged');
+        }
+    });
+
+        let qrs_pattern = document.getElementById('qrs_pattern');
+    qrs_pattern.addEventListener('change',function() {
+        if (this.value == 2 || this.value == 3) {
+            qrs_pattern.classList.add('flagged');
+        }
+        else {
+            qrs_pattern.classList.remove('flagged');
+        }
+    });
+
+        let axis = document.getElementById('axis');
+    axis.addEventListener('change',function() {
+        if (this.value == 2 || this.value == 3) {
+            axis.classList.add('flagged');
+        }
+        else {
+            axis.classList.remove('flagged');
+        }
+    });
+
+
+
+ let location_field = document.getElementById('location');
+    location_field.addEventListener('change',function() {
+        if (this.value != null) {
+            location_field.classList.add('flagged');
+        }
+        else {
+            location_field.classList.remove('flagged');
+        }
+    });
+
+
+     let strain_problem = document.getElementById('strain_problem');
+    strain_problem.addEventListener('change',function() {
+        if (this.value == 2 || this.value == 3) {
+            strain_problem.classList.add('flagged');
+        }
+        else {
+            strain_problem.classList.remove('flagged');
+        }
+    });
+
+ let nsr = document.getElementById('nsr');
+    nsr.addEventListener('change',function() {
+        if (this.value == 2) {
+            nsr.classList.add('flagged');
+        }
+        else {
+            nsr.classList.remove('flagged');
+        }
+    });
+
+    let p_wave_appearance = document.getElementById('p_wave_appearance');
+    p_wave_appearance.addEventListener('change',function() {
+        if (this.value == 2) {
+            p_wave_appearance.classList.add('flagged');
+        }
+        else {
+            p_wave_appearance.classList.remove('flagged');
+        }
+    });
+
+    let pr_interval = document.getElementById('pr_interval');
+    pr_interval.addEventListener('change',function() {
+        if (this.value == 2 || this.value == 3) {
+            pr_interval.classList.add('flagged');
+        }
+        else {
+            pr_interval.classList.remove('flagged');
+        }
+    });
+
+
+  </script>
+
+  <script src="{% static 'js/multiselect-dropdown.js' %}"></script>
+
+  </body>
+</html>
