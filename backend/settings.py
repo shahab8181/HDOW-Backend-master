@@ -168,17 +168,17 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 #     }
 
 # else:
-# DATABASES = {
-#       'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'sham8181',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#         # 'OPTIONS': {'sslmode': 'require'},
-#       }
-#     }
+    # DATABASES = {
+    #   'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'neondb',
+    #     'USER': 'negatic',
+    #     'PASSWORD': '3x5aLcnbQYBf',
+    #     'HOST': 'ep-royal-union-55139652.us-east-2.aws.neon.tech',
+    #     'PORT': '5432',
+    #     'OPTIONS': {'sslmode': 'require'},
+    #   }
+    # }
 # DATABASES = {
 #       'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
@@ -190,12 +190,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 #         'OPTIONS': {'sslmode': 'require'},
 #       }
 #     }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -203,7 +198,8 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.parse('postgres://hdow_backend_user:BZ9SldwO78TV6L2Dckj4pTeXaeSbL0nL@dpg-clvg2smd3nmc738cirs0-a.oregon-postgres.render.com/hdow_backend')
+database_url = os.environ.get('DATABASE_URL')
+DATABASES['default'] = dj_database_url.parse(database_url)
 
 
 if DEBUG:

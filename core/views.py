@@ -72,7 +72,11 @@ class Login_api(APIView):
         user = User.objects.filter(username=request.data.get('username')).first()
         if user.check_password(request.data.get('password')):
             login(request, user)
-            return Response({'id': user.id}, status=status.HTTP_200_OK)
+            return Response({
+              'id': user.id,
+              'first_name': user.first_name,
+              'last_name': user.last_name
+            }, status=status.HTTP_200_OK)
         return Response({'status': 'username or password incorect'}, status=status.HTTP_200_OK)
         
 
@@ -172,9 +176,9 @@ class TimeStamp_api(APIView):
 
 
 class studies_api(APIView):
-    authentication_classes = [BasicAuthentication]
+    # authentication_classes = [BasicAuthentication]
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         study = Study.objects.all()
@@ -182,7 +186,7 @@ class studies_api(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
         
     def post(self, request, *args, **kwargs):
-        urlencoded = request.data.get('StudyData', {})
+        urlencoded = request.data.get('EchoData', {})
         to_parse = parse.unquote(urlencoded)
         to_dic = json.loads(to_parse) # json to dictionary
         json_value = to_dic.get('study_quality')
@@ -395,9 +399,9 @@ class Location_api(APIView):
 
 
 class echos_api(APIView):
-    authentication_classes = [BasicAuthentication]
+    # authentication_classes = [BasicAuthentication]
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         echo = Echo.objects.all()
@@ -410,11 +414,11 @@ class echos_api(APIView):
         to_parse = parse.unquote(urlencoded)
         data = json.loads(to_parse) # json to dictionary
         system('cls')
-        json_value_1 = data.get('location')
-        json_value_2 = data.get('st_segment')
-        json_value_3 = data.get('st_segment_depression')
-        json_value_4 = data.get('st_segment_elevation')
-        json_value_5 = data.get('t_wave_morphology')
+        json_value_1 = data.get('location') # 1 to 12
+        json_value_2 = data.get('st_segment') # 1 to 3
+        json_value_3 = data.get('st_segment_depression') # 1 to 12
+        json_value_4 = data.get('st_segment_elevation') # 1 to 12
+        json_value_5 = data.get('t_wave_morphology') # 1 & 2
 
         to_list_1 = []
         to_list_2 = []
@@ -422,13 +426,35 @@ class echos_api(APIView):
         to_list_4 = []
         to_list_5 = []
 
-        for char in json_value_1:
-            if char.isdigit():
-                to_list_1.append(char)
+        if '10' in json_value_1 or '11' in json_value_1 or '12' in json_value_1:
+            if '10' in json_value_1:
+                to_list_1.append(int(json_value_1[json_value_1.find('10'):json_value_1.find('10')+2]))
+                json_value_1 = json_value_1.replace(json_value_1[json_value_1.find('10'):json_value_1.find('10')+2], 'x')
+
+            if '11' in json_value_1:
+                to_list_1.append(int(json_value_1[json_value_1.find('11'):json_value_1.find('11')+2]))
+                json_value_1 = json_value_1.replace(json_value_1[json_value_1.find('11'):json_value_1.find('11')+2], 'x')
+
+
+            if '12' in json_value_1:
+                to_list_1.append(int(json_value_1[json_value_1.find('12'):json_value_1.find('12')+2]))
+                json_value_1 = json_value_1.replace(json_value_1[json_value_1.find('12'):json_value_1.find('12')+2], 'x')
+         
+
+            for char in json_value_1:
+                if char.isdigit():
+                    to_list_1.append(char)
+            else:
+                final_value_1 = list(map(int, to_list_1))
+                data['location'] = final_value_1
         else:
-            final_value = list(map(int, to_list_1))
-            data['location'] = final_value
-        
+            for char in json_value_1:
+                if char.isdigit():
+                    to_list_1.append(char)
+            else:
+                final_value = list(map(int, to_list_1))
+                data['location'] = final_value
+            
         
         for char in json_value_2:
             if char.isdigit():
@@ -436,6 +462,7 @@ class echos_api(APIView):
         else:
             final_value = list(map(int, to_list_2))
             data['st_segment'] = final_value
+
 
         if '10' in json_value_3 or '11' in json_value_3 or '12' in json_value_3:
             if '10' in json_value_3:
@@ -448,10 +475,17 @@ class echos_api(APIView):
 
 
             if '12' in json_value_3:
-                    to_list_3.append(int(json_value_3[json_value_3.find('12'):json_value_3.find('12')+2]))
-                    json_value_3 = json_value_3.replace(json_value_3[json_value_3.find('12'):json_value_3.find('12')+2], 'x')
+                to_list_3.append(int(json_value_3[json_value_3.find('12'):json_value_3.find('12')+2]))
+                json_value_3 = json_value_3.replace(json_value_3[json_value_3.find('12'):json_value_3.find('12')+2], 'x')
          
 
+            for char in json_value_3:
+                if char.isdigit():
+                    to_list_3.append(char)
+            else:
+                final_value_1 = list(map(int, to_list_3))
+                data['st_segment_depression'] = final_value_1
+        else:
             for char in json_value_3:
                 if char.isdigit():
                     to_list_3.append(char)
@@ -485,6 +519,13 @@ class echos_api(APIView):
             else:
                 final_value_2 = list(map(int, to_list_4))
                 data['st_segment_elevation'] = final_value_2
+        else:
+            for char in json_value_4:
+                if char.isdigit():
+                    to_list_4.append(char)
+            else:
+                final_value_2 = list(map(int, to_list_4))
+                data['st_segment_elevation'] = final_value_2
 
 
         for char in json_value_5:
@@ -508,6 +549,157 @@ class echos_api(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             # return Response(serializer.validated_data.get('st_segment_elevation'), status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class echos_api(APIView):
+#     # authentication_classes = [BasicAuthentication]
+#     # authentication_classes = [SessionAuthentication, BasicAuthentication]
+#     # permission_classes = [AllowAny]
+
+#     def get(self, request, *args, **kwargs):
+#         echo = Echo.objects.all()
+#         serializer = EchoSerializer(instance=echo, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+        
+#     def post(self, request, *args, **kwargs):
+#         # data = request.data.get('EchoData', {})
+#         urlencoded = request.data.get('EchoData', {})
+#         to_parse = parse.unquote(urlencoded)
+#         data = json.loads(to_parse) # json to dictionary
+#         system('cls')
+#         json_value_1 = data.get('location')
+#         json_value_2 = data.get('st_segment')
+#         json_value_3 = data.get('st_segment_depression')
+#         json_value_4 = data.get('st_segment_elevation')
+#         json_value_5 = data.get('t_wave_morphology')
+
+#         to_list_1 = []
+#         to_list_2 = []
+#         to_list_3 = []
+#         to_list_4 = []
+#         to_list_5 = []
+
+#         for char in json_value_1:
+#             if char.isdigit():
+#                 to_list_1.append(char)
+#         else:
+#             final_value = list(map(int, to_list_1))
+#             data['location'] = final_value
+        
+        
+#         for char in json_value_2:
+#             if char.isdigit():
+#                 to_list_2.append(char)
+#         else:
+#             final_value = list(map(int, to_list_2))
+#             data['st_segment'] = final_value
+
+#         if '10' in json_value_3 or '11' in json_value_3 or '12' in json_value_3:
+#             if '10' in json_value_3:
+#                 to_list_3.append(int(json_value_3[json_value_3.find('10'):json_value_3.find('10')+2]))
+#                 json_value_3 = json_value_3.replace(json_value_3[json_value_3.find('10'):json_value_3.find('10')+2], 'x')
+
+#             if '11' in json_value_3:
+#                 to_list_3.append(int(json_value_3[json_value_3.find('11'):json_value_3.find('11')+2]))
+#                 json_value_3 = json_value_3.replace(json_value_3[json_value_3.find('11'):json_value_3.find('11')+2], 'x')
+
+
+#             if '12' in json_value_3:
+#                     to_list_3.append(int(json_value_3[json_value_3.find('12'):json_value_3.find('12')+2]))
+#                     json_value_3 = json_value_3.replace(json_value_3[json_value_3.find('12'):json_value_3.find('12')+2], 'x')
+         
+
+#             for char in json_value_3:
+#                 if char.isdigit():
+#                     to_list_3.append(char)
+#             else:
+#                 final_value_1 = list(map(int, to_list_3))
+#                 data['st_segment_depression'] = final_value_1
+
+
+#         if '10' in json_value_4 or '11' in json_value_4 or '12' in json_value_4:
+#             if '10' in json_value_4:
+#                 to_list_4.append(int(json_value_4[json_value_4.find('10'):json_value_4.find('10')+2]))
+#                 json_value_4 = json_value_4.replace(json_value_4[json_value_4.find('10'):json_value_4.find('10')+2], 'x')
+
+#             try:
+#                 if '11' in json_value_4:
+#                     to_list_4.append(int(json_value_4[json_value_4.find('11'):json_value_4.find('11')+2]))
+#                     json_value_4 = json_value_4.replace(json_value_4[json_value_4.find('11'):json_value_4.find('11')+2], 'x')
+#             except:
+#                 pass
+
+#             try:
+#                 if '12' in json_value_4:
+#                     to_list_4.append(int(json_value_4[json_value_4.find('12'):json_value_4.find('12')+2]))
+#                     json_value_4 = json_value_4.replace(json_value_4[json_value_4.find('12'):json_value_4.find('12')+2], 'x')
+#             except:
+#                 pass
+
+#             for char in json_value_4:
+#                 if char.isdigit():
+#                     to_list_4.append(char)
+#             else:
+#                 final_value_2 = list(map(int, to_list_4))
+#                 data['st_segment_elevation'] = final_value_2
+
+
+#         for char in json_value_5:
+#             if char.isdigit():
+#                 to_list_5.append(char)
+#         else:
+#             final_value = list(map(int, to_list_5))
+#             data['t_wave_morphology'] = final_value
+
+#         data = json.dumps(data)
+
+#         try:
+#             data = json.loads(data)
+#         except json.JSONDecodeError as e:
+#             return Response({'error': 'Invalid JSON format'}, status=status.HTTP_400_BAD_REQUEST)
+
+#         serializer = EchoSerializer(data=data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#             # return Response(serializer.validated_data.get('st_segment_elevation'), status=status.HTTP_400_BAD_REQUEST)
 
 
 
